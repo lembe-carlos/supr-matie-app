@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SuperMarché CM — Boutique en ligne</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#007A3D">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SuperMarché CM">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=180&h=180&fit=crop">
+<meta name="description" content="Achetez vos produits en ligne depuis les supermarchés du Cameroun. Livraison rapide à Yaoundé, Douala et partout au Cameroun.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="boutique.css">
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="bh">
+  <div class="bh-inner">
+    <a class="blogo" href="boutique.html">
+      <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=80&h=80&fit=crop" alt="Logo">
+      <div>
+        Super<span>Marché</span> CM
+        <span class="blogo-sub">Boutique en ligne</span>
+      </div>
+    </a>
+
+    <div class="bsearch">
+      <input type="text" id="search-input" placeholder="Rechercher un produit..." oninput="filterSearch()">
+      <button onclick="filterSearch()">Chercher</button>
+    </div>
+
+    <div class="bh-actions">
+      <button class="bcart-btn" onclick="openCart()">
+        <img src="https://img.icons8.com/ios/24/007A3D/shopping-cart.png" alt="panier" style="width:20px;height:20px;vertical-align:middle"> Panier
+        <span class="bcart-cnt" id="cart-cnt">0</span>
+      </button>
+      <button class="bcart-btn" onclick="ouvrirCompteClient()" id="btn-compte-client" style="background:#fff;color:#007A3D;border:2px solid #007A3D">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="btn-compte-txt">Mon compte</span>
+      </button>
+      <a href="index.html" class="bcart-btn" style="background:#007A3D;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:5px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Espace gérant
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ════════ HERO ════════ -->
+<div class="bhero">
+  <div class="bhero-bg" style="background-image:url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1400&h=500&fit=crop')"></div>
+  <div class="bhero-content">
+    <h1>Vos courses livrées<br><span>chez vous au Cameroun</span></h1>
+    <p>Produits frais, alimentaires et d'hygiène — livraison rapide à Yaoundé, Douala et plus</p>
+    <div class="bhero-btns">
+      <button class="bhero-btn primary" onclick="document.getElementById('produits-section').scrollIntoView({behavior:'smooth'})">
+        Commander maintenant
+      </button>
+      <button class="bhero-btn sec" onclick="document.getElementById('info-livraison').scrollIntoView({behavior:'smooth'})">
+        Infos livraison
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ BANDEAU INFOS ════════ -->
+<div class="bband">
+  <div class="bband-item">
+    <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=40&h=40&fit=crop" alt="">
+    Livraison express 2-4h
+  </div>
+  <div class="bband-item">
+    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=40&h=40&fit=crop" alt="">
+    Paiement Mobile Money
+  </div>
+  <div class="bband-item">
+    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=40&h=40&fit=crop" alt="">
+    +500 produits disponibles
+  </div>
+  <div class="bband-item">
+    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=40&h=40&fit=crop" alt="">
+    Service client 7j/7
+  </div>
+</div>
+
+<!-- ════════ CONTENU PRINCIPAL ════════ -->
+<div class="bmain">
+
+  <!-- Filtres catégories -->
+  <div class="bcats" id="bcats"></div>
+
+  <!-- Titre section produits -->
+  <div class="bsec-title" id="produits-section">
+    Nos produits disponibles
+  </div>
+
+  <!-- Grille produits -->
+  <div class="bpgrid" id="bpgrid"></div>
+
+  <!-- Section info livraison -->
+  <div id="info-livraison" style="background:#fff;border-radius:16px;padding:28px;border:1px solid var(--br);margin-bottom:24px">
+    <div class="bsec-title" style="margin-bottom:20px">Nos services de livraison</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+      <div style="background:var(--bg);border-radius:12px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=130&fit=crop" style="width:100%;height:110px;object-fit:cover" alt="">
+        <div style="padding:14px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:5px">Express 2-4h</div>
+          <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px">Yaoundé et Douala centre-ville</div>
+          <span style="background:#E3F0FC;color:#0078D4;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">2 000 FCFA</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=130&fit=crop" style="width:100%;height:110px;object-fit:cover" alt="">
+        <div style="padding:14px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:5px">Standard 24-48h</div>
+          <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px">Toutes les grandes villes</div>
+          <span style="background:#E8F5EF;color:var(--g);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">3 500 FCFA</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400&h=130&fit=crop" style="width:100%;height:110px;object-fit:cover" alt="">
+        <div style="padding:14px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:5px">Retrait en magasin</div>
+          <div style="font-size:12.5px;color:var(--mu);margin-bottom:8px">SuperMarché CM — Bepanda, Douala</div>
+          <span style="background:#FEF9E7;color:#B8860B;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700">GRATUIT</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;background:#E8F5EF;border-radius:10px;padding:13px 16px;font-size:13.5px;color:var(--gd)">
+      <strong>Livraison GRATUITE</strong> pour toute commande supérieure à <strong>50 000 FCFA</strong> (zones Yaoundé et Douala)
+    </div>
+  </div>
+
+  <!-- Paiements acceptés -->
+  <div style="background:#fff;border-radius:16px;padding:22px;border:1px solid var(--br);margin-bottom:24px;text-align:center">
+    <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:16px">Moyens de paiement acceptés</div>
+    <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+      <div style="background:var(--bg);border-radius:12px;padding:14px 22px;display:flex;align-items:center;gap:10px">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=50&h=50&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" alt="">
+        <div style="text-align:left"><div style="font-weight:700;font-size:13px">MTN Mobile Money</div><div style="font-size:11px;color:var(--mu)">*126#</div></div>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;padding:14px 22px;display:flex;align-items:center;gap:10px">
+        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=50&h=50&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" alt="">
+        <div style="text-align:left"><div style="font-weight:700;font-size:13px">Orange Money</div><div style="font-size:11px;color:var(--mu)">#150#</div></div>
+      </div>
+      <div style="background:var(--bg);border-radius:12px;padding:14px 22px;display:flex;align-items:center;gap:10px">
+        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=50&h=50&fit=crop" style="width:36px;height:36px;border-radius:8px;object-fit:cover" alt="">
+        <div style="text-align:left"><div style="font-weight:700;font-size:13px">Espèces</div><div style="font-size:11px;color:var(--mu)">À la livraison</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /bmain -->
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="bfooter">
+  <div class="bfooter-inner">
+    <div class="bfooter-grid">
+      <div>
+        <h4 id="footer-nom">SuperMarché CM — NGAPET LEMBE</h4>
+        <p id="footer-desc">La première plateforme de courses en ligne au Cameroun. Produits frais, prix compétitifs, livraison rapide partout au pays.</p>
+        <div style="margin-top:12px;font-size:12px">
+          <div id="footer-adresse"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7EC8A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Bepanda, Douala, Cameroun</div>
+          <div id="footer-tel"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7EC8A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> +237 683 39 22 68 / 693 59 14 79</div>
+          <div id="footer-email"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7EC8A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> lembetiny02@gmail.com</div>
+        </div>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <a href="boutique.html">Boutique</a>
+        <a href="index.html">Espace gérant</a>
+        <a href="#info-livraison">Livraison</a>
+        <a href="#" onclick="btoast('FAQ bientôt disponible','warning')">FAQ</a>
+        <a href="#" onclick="btoast('Conditions bientôt disponibles','warning')">CGV</a>
+      </div>
+      <div>
+        <h4>Nos magasins</h4>
+        <div id="footer-magasins">
+          <a href="https://wa.me/237693591479" target="_blank">WhatsApp Business</a>
+          <a href="https://www.facebook.com/idriss.lembe.2025" target="_blank">Facebook</a>
+          <a href="https://www.threads.com/@ngapetlembeidriss" target="_blank">Threads</a>
+          <a href="https://youtube.com/@idrisscarlos-ov5kq" target="_blank">YouTube</a>
+        </div>
+      </div>
+    </div>
+    <div class="bfooter-bottom" id="footer-copy">
+      © 2026 SuperMarché CM — NGAPET LEMBE IDRISS CARLOS — Tous droits réservés
+    </div>
+  </div>
+</footer>
+<div class="flag-bar"></div>
+
+<!-- ════════ BOUTON INSTALLER L'APP ════════ -->
+<div id="btn-installer-app" style="display:none;position:fixed;bottom:80px;right:16px;z-index:999;background:#007A3D;color:#fff;padding:10px 16px;border-radius:30px;box-shadow:0 4px 16px rgba(0,122,61,.4);cursor:pointer;align-items:center;gap:8px;font-size:13px;font-weight:700">
+  <img src="https://img.icons8.com/ios/24/007A3D/smartphone-tablet.png" alt="mobile" style="width:18px;height:18px;vertical-align:middle"> Installer l'app
+</div>
+<!-- ════════ BOUTON WHATSAPP FLOTTANT ════════ -->
+<a class="wa-float" href="https://wa.me/237683392268?text=Bonjour,%20je%20veux%20passer%20une%20commande" target="_blank" title="Commander via WhatsApp">
+  <img src="https://img.icons8.com/ios/24/007A3D/chat.png" alt="message" style="width:20px;height:20px;vertical-align:middle">
+</a>
+
+<!-- ════════ PANIER SLIDE ════════ -->
+<div class="cart-ov" id="cart-ov">
+  <div class="cart-bg" onclick="closeCart()"></div>
+  <div class="cart-panel">
+    <div class="cart-head">
+      <h3>Mon panier <img src="https://img.icons8.com/ios/24/007A3D/shopping-cart.png" alt="panier" style="width:20px;height:20px;vertical-align:middle"></h3>
+      <button class="cart-close" onclick="closeCart()"><img src="https://img.icons8.com/ios/18/CE1126/delete-sign.png" alt="fermer" style="width:14px;height:14px;vertical-align:middle"></button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-foot">
+      <div class="cart-row"><span>Sous-total</span><span id="cart-st">0 FCFA</span></div>
+      <div class="cart-row"><span>Livraison</span><span style="color:var(--g);font-weight:700" id="cart-liv">À calculer</span></div>
+      <div class="cart-total-row"><span>TOTAL</span><span id="cart-tot">0 FCFA</span></div>
+      <button class="cart-cmd-btn" onclick="openCmdModal()" id="cart-cmd-btn" disabled>
+        Passer la commande
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ MODAL COMMANDE ════════ -->
+<div class="cmd-ov" id="cmd-ov">
+  <div class="cmd-modal">
+    <div class="cmd-head">
+      <h3 id="cmd-modal-title">Ma commande</h3>
+      <button class="cart-close" onclick="closeCmdModal()"><img src="https://img.icons8.com/ios/18/CE1126/delete-sign.png" alt="fermer" style="width:14px;height:14px;vertical-align:middle"></button>
+    </div>
+
+    <!-- Étapes -->
+    <div class="cmd-body">
+      <div class="cmd-step" id="cmd-steps">
+        <div class="cmd-step-item">
+          <div class="cmd-step-dot active" id="step-dot-1">1</div>
+          <div class="cmd-step-lbl">Infos</div>
+        </div>
+        <div class="cmd-step-line" id="step-line-1"></div>
+        <div class="cmd-step-item">
+          <div class="cmd-step-dot" id="step-dot-2">2</div>
+          <div class="cmd-step-lbl">Paiement</div>
+        </div>
+        <div class="cmd-step-line" id="step-line-2"></div>
+        <div class="cmd-step-item">
+          <div class="cmd-step-dot" id="step-dot-3">3</div>
+          <div class="cmd-step-lbl">Confirmation</div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 1 : Infos client -->
+      <div id="step-1">
+        <div class="cform">
+          <div class="cfg-row">
+            <div class="cfg">
+              <label>Prénom *</label>
+              <input type="text" id="cli-prenom" placeholder="Prénom">
+            </div>
+            <div class="cfg">
+              <label>Nom *</label>
+              <input type="text" id="cli-nom" placeholder="Nom de famille">
+            </div>
+          </div>
+          <div class="cfg">
+            <label>Téléphone *</label>
+            <input type="tel" id="cli-tel" placeholder="+237 6XX XX XX XX">
+          </div>
+          <div class="cfg">
+            <label>Ville de livraison *</label>
+            <select id="cli-ville">
+              <option value="">Sélectionner votre ville...</option>
+              <option value="Yaoundé Centre">Yaoundé Centre (2-4h) — 2 000 FCFA</option>
+              <option value="Yaoundé Banlieue">Yaoundé Banlieue (4-8h) — 3 500 FCFA</option>
+              <option value="Douala Akwa">Douala Akwa (2-4h) — 2 000 FCFA</option>
+              <option value="Douala Banlieue">Douala Banlieue (4-8h) — 3 500 FCFA</option>
+              <option value="Bafoussam">Bafoussam (24h) — 5 000 FCFA</option>
+              <option value="Garoua">Garoua (24h) — 5 000 FCFA</option>
+              <option value="Maroua">Maroua (48h) — 7 500 FCFA</option>
+              <option value="Kribi">Kribi (48h) — 7 500 FCFA</option>
+              <option value="Retrait magasin">Retrait en magasin — GRATUIT</option>
+            </select>
+          </div>
+          <div class="cfg" id="adresse-wrap">
+            <label>Adresse complète *</label>
+            <textarea id="cli-adresse" placeholder="Quartier, rue, repère..."></textarea>
+          </div>
+          <div class="cfg">
+            <label>Supermarché préféré</label>
+            <select id="cli-sm" data-sm-select>
+              <option>SuperMarché CM — Douala</option>
+            </select>
+          </div>
+          <div class="cfg">
+            <label>Notes pour la livraison</label>
+            <textarea id="cli-notes" placeholder="Instructions spéciales, disponibilités..." style="min-height:55px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 2 : Paiement -->
+      <div id="step-2" style="display:none">
+        <!-- Code promo -->
+        <div style="margin-bottom:16px">
+          <div style="font-size:11px;font-weight:700;color:#999;letter-spacing:.08em;margin-bottom:6px">CODE PROMO</div>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="promo-input" placeholder="Entrez votre code promo" style="flex:1;padding:12px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:14px;text-transform:uppercase">
+            <button onclick="appliquerPromoCode()" style="background:#007A3D;color:#fff;border:none;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer">Appliquer</button>
+          </div>
+          <div id="promo-msg" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+        <!-- Récapitulatif -->
+        <div class="recap" id="recap-items"></div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">
+          Choisir le mode de paiement
+        </div>
+
+        <div class="pay-opts">
+          <label class="pay-opt selected" id="opt-mtn" onclick="selectPay('mtn')">
+            <input type="radio" name="pay" value="mtn" checked>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/MTN_Logo.svg/200px-MTN_Logo.svg.png" class="pay-opt-logo" alt="MTN" style="object-fit:contain;background:#ffcc00;padding:4px;border-radius:6px">
+            <div class="pay-opt-inf">
+              <h4>MTN Mobile Money</h4>
+              <p>Paiement sécurisé via *126#</p>
+            </div>
+            <div class="pay-check" id="chk-mtn"><img src="https://img.icons8.com/ios/18/007A3D/checkmark.png" alt="ok" style="width:14px;height:14px;vertical-align:middle"></div>
+          </label>
+
+          <label class="pay-opt" id="opt-orange" onclick="selectPay('orange')">
+            <input type="radio" name="pay" value="orange">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/200px-Orange_logo.svg.png" class="pay-opt-logo" alt="Orange" style="object-fit:contain;background:#ff6600;padding:4px;border-radius:6px">
+            <div class="pay-opt-inf">
+              <h4>Orange Money</h4>
+              <p>Paiement sécurisé via #150#</p>
+            </div>
+            <div class="pay-check" id="chk-orange"></div>
+          </label>
+
+          <label class="pay-opt" id="opt-yoomee" onclick="selectPay('yoomee')">
+            <input type="radio" name="pay" value="yoomee">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Yoomee_logo.png/200px-Yoomee_logo.png" class="pay-opt-logo" alt="Yoomee" onerror="this.style.background='#0055a5';this.style.color='#fff';this.alt='YM'" style="object-fit:contain;background:#0055a5;padding:4px;border-radius:6px">
+            <div class="pay-opt-inf">
+              <h4>Yoomee Money</h4>
+              <p>Paiement via Yoomee Mobile</p>
+            </div>
+            <div class="pay-check" id="chk-yoomee"></div>
+          </label>
+
+          <label class="pay-opt" id="opt-virement" onclick="selectPay('virement')">
+            <input type="radio" name="pay" value="virement">
+            <div class="pay-opt-logo" style="background:#1e3a5f;border-radius:6px;display:flex;align-items:center;justify-content:center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </div>
+            <div class="pay-opt-inf">
+              <h4>Virement bancaire</h4>
+              <p>Afriland, SCB, UBA, Ecobank...</p>
+            </div>
+            <div class="pay-check" id="chk-virement"></div>
+          </label>
+
+          <label class="pay-opt" id="opt-especes" onclick="selectPay('especes')">
+            <input type="radio" name="pay" value="especes">
+            <div class="pay-opt-logo" style="background:#007A3D;border-radius:6px;display:flex;align-items:center;justify-content:center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
+            </div>
+            <div class="pay-opt-inf">
+              <h4>Espèces à la livraison</h4>
+              <p>Payez à la réception de votre commande</p>
+            </div>
+            <div class="pay-check" id="chk-especes"></div>
+          </label>
+        </div>
+
+        <!-- Numéro Mobile Money -->
+        <div class="pay-num-wrap" id="pay-num-wrap" style="
+          background:#fff3cd;
+          border:2px solid #e6a817;
+          border-radius:12px;
+          padding:16px;
+          margin:14px 0;
+        ">
+          <label id="pay-num-label" style="
+            display:block;
+            font-size:13px;
+            font-weight:700;
+            color:#b45309;
+            letter-spacing:.08em;
+            margin-bottom:8px;
+          "><img src="https://img.icons8.com/ios/20/e6a817/warning.png" alt="attention" style="width:18px;height:18px;vertical-align:middle"> NUMÉRO MTN MOBILE MONEY OBLIGATOIRE *</label>
+          <input type="tel" id="pay-num" placeholder="Ex: 683 39 22 68" maxlength="20"
+            oninput="clearPayNumError()" style="
+            width:100%;
+            padding:14px 16px;
+            font-size:18px;
+            font-weight:600;
+            border:2px solid #e6a817;
+            border-radius:10px;
+            background:#fffbf0;
+            color:#1a1a1a;
+            box-sizing:border-box;
+            outline:none;
+            letter-spacing:.05em;
+          ">
+          <p id="pay-num-hint" style="
+            font-size:12px;
+            color:#92400e;
+            margin:6px 0 0;
+          "><img src="https://img.icons8.com/ios/24/007A3D/phone.png" alt="telephone" style="width:20px;height:20px;vertical-align:middle"> Entrez le numéro qui recevra la demande de paiement</p>
+        </div>
+
+        <!-- Instructions paiement -->
+        <div class="pay-instruction" id="pay-instruction">
+          <strong>Comment payer :</strong><br>
+          1. Composez <strong>*126#</strong> sur votre téléphone MTN<br>
+          2. Sélectionnez <strong>"Payer marchand"</strong><br>
+          3. Entrez le numéro marchand : <strong class="mtn-num">683 39 22 68</strong><br>
+          4. Entrez le montant : <strong id="pay-montant">0 FCFA</strong><br>
+          5. Entrez votre code secret et validez<br>
+          <br>
+          Vous recevrez un <strong>SMS de confirmation</strong> et notre équipe vous contactera.
+        </div>
+
+        <div id="especes-instruction" style="display:none" class="pay-instruction">
+          Préparez le montant exact en espèces : <strong id="pay-montant-esp">0 FCFA</strong><br>
+          Notre livreur se déplacera à votre adresse. Vous serez contacté avant la livraison.
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 : Succès -->
+      <div id="step-3" style="display:none">
+        <div class="success-screen">
+          <div class="success-ico"><img src="https://img.icons8.com/ios/18/007A3D/checkmark.png" alt="ok" style="width:16px;height:16px;vertical-align:middle"></div>
+          <h3>Commande confirmée !</h3>
+          <p>Votre commande a été enregistrée avec succès. Notre équipe vous contactera très bientôt.</p>
+          <div class="cmd-num" id="success-num">#CM-0000</div>
+          <div class="success-details" id="success-details"></div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <button class="mbtn primary" onclick="closeCmdModal();resetBoutique()">
+              Continuer mes achats
+            </button>
+            <a id="wa-confirm" href="#" target="_blank" style="display:block;background:#25D366;color:#fff;padding:12px;border-radius:10px;font-weight:700;font-size:14px;text-align:center;text-decoration:none">
+              Confirmer via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-foot" id="cmd-foot">
+      <button class="mbtn sec" id="btn-retour" onclick="stepBack()" style="display:none">Retour</button>
+      <button class="mbtn primary" id="btn-suivant" onclick="stepNext()">Continuer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="btw" id="btw"></div>
+
+<!-- SDK Supabase (base de données) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Config + Services -->
+<script src="config.js"></script>
+<script src="villes.js"></script>
+<script src="db.js"></script>
+<script src="paiement.js"></script>
+<script src="boutique.js"></script>
+<script>
+// Enregistrement du Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(reg) {
+        console.log('[PWA] Service Worker enregistré');
+        // Proposer l'installation
+        window.addEventListener('beforeinstallprompt', function(e) {
+          e.preventDefault();
+          var btn = document.getElementById('btn-installer-app');
+          if (btn) {
+            btn.style.display = 'flex';
+            btn.addEventListener('click', function() {
+              e.prompt();
+              e.userChoice.then(function(r){ if(r.outcome==='accepted') btn.style.display='none'; });
+            });
+          }
+        });
+      })
+      .catch(function(err) { console.warn('[PWA] SW non enregistré:', err); });
+  });
+}
+</script>
+
+<!-- ════════ MODAL COMPTE CLIENT ════════ -->
+<div id="modal-compte-client" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto">
+
+    <!-- Header modal -->
+    <div style="background:linear-gradient(135deg,#007A3D,#00a352);padding:20px 24px;border-radius:20px 20px 0 0;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="color:#fff;font-size:20px;font-weight:800" id="modal-compte-titre">Mon Compte</div>
+        <div style="color:rgba(255,255,255,0.8);font-size:13px">SuperMarché CM</div>
+      </div>
+      <button onclick="fermerCompteClient()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer">×</button>
+    </div>
+
+    <!-- VUE : CONNEXION -->
+    <div id="vue-login-client" style="padding:24px">
+      <p style="color:#666;font-size:14px;margin-bottom:20px;text-align:center">Connectez-vous pour suivre vos commandes et gagner des points fidélité</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">EMAIL</label>
+          <input id="cli-login-email" type="email" placeholder="votre@email.com" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">MOT DE PASSE</label>
+          <input id="cli-login-pwd" type="password" placeholder="Votre mot de passe" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div id="cli-login-err" style="color:#ef4444;font-size:13px;display:none"></div>
+        <button onclick="connecterClient()" style="background:#007A3D;color:#fff;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;width:100%">Se connecter</button>
+        <div style="text-align:center;color:#666;font-size:13px">
+          Pas encore de compte ?
+          <span onclick="afficherVueClient('register')" style="color:#007A3D;font-weight:700;cursor:pointer"> Créer un compte</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE : INSCRIPTION -->
+    <div id="vue-register-client" style="padding:24px;display:none">
+      <p style="color:#666;font-size:14px;margin-bottom:20px;text-align:center">Créez votre compte pour profiter de nos offres et suivre vos commandes</p>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">NOM COMPLET *</label>
+          <input id="cli-reg-nom" type="text" placeholder="Jean Dupont" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">TÉLÉPHONE *</label>
+          <input id="cli-reg-tel" type="tel" placeholder="+237 6XX XX XX XX" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">EMAIL *</label>
+          <input id="cli-reg-email" type="email" placeholder="votre@email.com" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">ADRESSE DE LIVRAISON</label>
+          <input id="cli-reg-adresse" type="text" placeholder="Ex: Bepanda, Douala" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#555;display:block;margin-bottom:4px">MOT DE PASSE *</label>
+          <input id="cli-reg-pwd" type="password" placeholder="Minimum 6 caractères" style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;box-sizing:border-box">
+        </div>
+        <div id="cli-reg-err" style="color:#ef4444;font-size:13px;display:none"></div>
+        <button onclick="inscrireClient()" style="background:#007A3D;color:#fff;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;width:100%">Créer mon compte</button>
+        <div style="text-align:center;color:#666;font-size:13px">
+          Déjà un compte ?
+          <span onclick="afficherVueClient('login')" style="color:#007A3D;font-weight:700;cursor:pointer"> Se connecter</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE : PROFIL CLIENT CONNECTÉ -->
+    <div id="vue-profil-client" style="padding:24px;display:none">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="width:70px;height:70px;border-radius:50%;background:#007A3D;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:28px;color:#fff;font-weight:800" id="cli-avatar">J</div>
+        <div style="font-weight:800;font-size:18px" id="cli-profil-nom">Jean</div>
+        <div style="color:#666;font-size:13px" id="cli-profil-email">jean@email.com</div>
+        <div style="color:#666;font-size:13px" id="cli-profil-tel">+237 6XX XX XX XX</div>
+        <!-- Points fidélité -->
+        <div style="background:#FFF9E6;border:2px solid #FCD116;border-radius:12px;padding:10px;margin-top:12px;display:inline-block">
+          <div style="font-size:24px;font-weight:800;color:#b45309" id="cli-profil-points">0</div>
+          <div style="font-size:12px;color:#92400e">Points fidélité</div>
+        </div>
+      </div>
+
+      <!-- Mes commandes -->
+      <h4 style="margin-bottom:10px;color:#007A3D">Mes dernières commandes</h4>
+      <div id="cli-mes-commandes" style="margin-bottom:16px">
+        <p style="color:#999;font-size:13px;text-align:center">Aucune commande pour l'instant</p>
+      </div>
+
+      <!-- Bouton déconnexion -->
+      <button onclick="deconnecterClient()" style="background:#fff;color:#ef4444;border:2px solid #ef4444;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;width:100%">
+        Se déconnecter
+      </button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

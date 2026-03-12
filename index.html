@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SuperMarché CM — Gestion de Supermarchés au Cameroun</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#007A3D">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SuperMarché CM">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=180&h=180&fit=crop">
+<meta name="description" content="Plateforme intelligente de gestion des supermarchés du Cameroun. Stocks, commandes, ventes, employés et assistant IA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     ÉCRAN CONNEXION
+     ═══════════════════════════════════════ -->
+<div class="auth-screen" id="screen-login">
+  <div class="al">
+    <div class="al-bg" style="background-image:url('https://images.unsplash.com/photo-1604719312566-8912e9c8a213?w=800&h=500&fit=crop')"></div>
+    <div class="deco d1"></div>
+    <div class="deco d2"></div>
+    <div class="alogo">Super<span>Marché</span><br>CM</div>
+    <p class="atag">La plateforme intelligente de gestion<br>des supermarchés du Cameroun</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/120px-Flag_of_Cameroon.svg.png" class="aflag-img" alt="Drapeau Cameroun">
+    <div class="afeats">
+      <div class="afeat">
+        <div class="afeat-i"><img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=200&h=200&fit=crop" alt="Supermarché"></div>
+        <span>Gérez plusieurs supermarchés depuis un tableau de bord unique</span>
+      </div>
+      <div class="afeat">
+        <div class="afeat-i"><img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" alt="IA"></div>
+        <span>Assistant IA intégré — conseils en temps réel sur vos données</span>
+      </div>
+      <div class="afeat">
+        <div class="afeat-i"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop" alt="Rapports"></div>
+        <span>Rapports automatiques et alertes de stock instantanées</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FORMULAIRE CONNEXION SÉCURISÉ ══ -->
+  <div class="ar">
+
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="width:64px;height:64px;background:#007A3D;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 style="font-size:26px;font-weight:900;margin-bottom:4px">Connexion</h2>
+      <p style="color:#888;font-size:13px">Espace réservé aux administrateurs et gérants</p>
+    </div>
+
+    <!-- Message erreur -->
+    <div class="aerr" id="login-err" style="margin-bottom:14px"></div>
+
+    <!-- Email -->
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Adresse Email</label>
+      <div style="position:relative">
+        <div style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#007A3D;pointer-events:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <input
+          type="text"
+          id="l-email"
+          placeholder="votre@email.com"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          style="width:100%;padding:13px 14px 13px 40px;border:2px solid #e5e7eb;border-radius:12px;font-size:15px;box-sizing:border-box;outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='#007A3D'"
+          onblur="this.style.borderColor='#e5e7eb'"
+        >
+      </div>
+    </div>
+
+    <!-- Mot de passe -->
+    <div style="margin-bottom:20px">
+      <label style="display:block;font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Mot de passe</label>
+      <div style="position:relative">
+        <div style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#007A3D;pointer-events:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <input
+          type="password"
+          id="l-pwd"
+          placeholder="Votre mot de passe"
+          style="width:100%;padding:13px 46px 13px 40px;border:2px solid #e5e7eb;border-radius:12px;font-size:15px;box-sizing:border-box;outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='#007A3D'"
+          onblur="this.style.borderColor='#e5e7eb'"
+          onkeydown="if(event.key==='Enter')doLogin()"
+        >
+        <button
+          type="button"
+          onclick="togglePwd('l-pwd',this)"
+          style="position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;padding:4px;display:flex;align-items:center"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div id="pwd-visible-hint" style="display:none;margin-top:6px;padding:7px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;color:#007A3D;font-weight:600">
+        👁 Mot de passe visible — vérifiez qu'il est correct avant de vous connecter
+      </div>
+    </div>
+
+    <!-- Bouton connexion -->
+    <button
+      onclick="doLogin()"
+      style="width:100%;padding:15px;background:#007A3D;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,122,61,.3);transition:background .2s"
+      onmouseover="this.style.background='#005a2d'"
+      onmouseout="this.style.background='#007A3D'"
+    >
+      Se connecter
+    </button>
+
+    <div style="text-align:center;font-size:12px;color:#999;margin-top:8px">
+      Nouveau gérant ?
+      <span onclick="showScreen('register')" style="color:#007A3D;font-weight:700;cursor:pointer;text-decoration:underline">Créer un compte</span>
+    </div>
+
+    <div style="text-align:center;margin-top:16px">
+      <span style="font-size:10px;color:#ccc">v21 — 09/03/2026</span>
+      <span onclick="viderCache()" style="font-size:10px;color:#ddd;cursor:pointer;margin-left:10px">↺ Vider cache</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ÉCRAN INSCRIPTION
+     ═══════════════════════════════════════ -->
+<div class="auth-screen hidden" id="screen-register">
+  <div class="al">
+    <div class="al-bg" style="background-image:url('https://images.unsplash.com/photo-1604719312566-8912e9c8a213?w=800&h=500&fit=crop')"></div>
+    <div class="deco d1"></div>
+    <div class="deco d2"></div>
+    <div class="alogo">Super<span>Marché</span><br>CM</div>
+    <p class="atag">Rejoignez la plateforme N°1 de gestion<br>des supermarchés au Cameroun</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/120px-Flag_of_Cameroon.svg.png" class="aflag-img" alt="Drapeau Cameroun">
+    <div class="afeats">
+      <div class="afeat">
+        <div class="afeat-i"><img src="https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?w=200&h=200&fit=crop" alt=""></div>
+        <span>Inscription gratuite, aucune carte bancaire requise</span>
+      </div>
+      <div class="afeat">
+        <div class="afeat-i"><img src="https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?w=200&h=200&fit=crop" alt=""></div>
+        <span>Données sécurisées — hébergement au Cameroun</span>
+      </div>
+      <div class="afeat">
+        <div class="afeat-i"><img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" alt=""></div>
+        <span>IA powered by Claude — disponible 24h/24</span>
+      </div>
+    </div>
+  </div>
+  <div class="ar">
+    <h2>Créer un compte</h2>
+    <p>Rejoignez des dizaines de gérants qui nous font confiance</p>
+    <div class="aerr" id="reg-err"></div>
+    <div class="asuc" id="reg-suc"></div>
+    <div class="aform">
+      <!-- Code invitation obligatoire -->
+      <div class="afg" style="background:#fffbeb;border:2px solid #f59e0b;border-radius:12px;padding:12px">
+        <label style="color:#92400e;font-weight:800;font-size:12px">🔑 CODE D'INVITATION OBLIGATOIRE</label>
+        <input type="text" id="r-code" placeholder="Ex: SM-ABC123" autocorrect="off" autocapitalize="characters" spellcheck="false" oninput="detecterRoleCode(this.value)" style="background:#fff;margin-top:6px;letter-spacing:2px;font-weight:700;text-transform:uppercase">
+        <p style="font-size:11px;color:#92400e;margin-top:4px">Demandez votre code à l'administrateur</p>
+      </div>
+      <div class="arow">
+        <div class="afg"><label>Prénom</label><input type="text" id="r-prenom" placeholder="Prénom"></div>
+        <div class="afg"><label>Nom</label><input type="text" id="r-nom" placeholder="Nom de famille"></div>
+      </div>
+      <div class="afg"><label>Email</label><input type="email" id="r-email" placeholder="vous@email.cm"></div>
+      <div class="afg"><label>Téléphone</label><input type="tel" id="r-tel" placeholder="+237 683 39 22 68"></div>
+      <div class="afg" id="r-sm-wrap"><label>Nom du supermarché</label><input type="text" id="r-sm" placeholder="Mon Supermarché Yaoundé"></div>
+      <div class="arow">
+        <div class="afg">
+          <label>Ville</label>
+          <select id="r-ville">
+            <option value="">Sélectionner...</option>
+            <option>Yaoundé</option><option>Douala</option><option>Bafoussam</option>
+            <option>Garoua</option><option>Maroua</option><option>Kribi</option><option>Limbé</option>
+          </select>
+        </div>
+        <div class="afg">
+          <label>Rôle attribué</label>
+          <div id="r-role-display" style="padding:10px 14px;border:2px solid #d1fae5;border-radius:10px;background:#f0fdf4;font-weight:700;color:#007A3D;font-size:14px">
+            Entrez votre code d'invitation ci-dessus
+          </div>
+          <input type="hidden" id="r-role" value="">
+        </div>
+      </div>
+      <div class="afg">
+        <label>Mot de passe</label>
+        <div style="position:relative;display:flex;align-items:center">
+          <input type="password" id="r-pwd" placeholder="Min. 8 caractères" oninput="checkPwd(this.value)" style="width:100%;padding-right:40px;box-sizing:border-box">
+          <button type="button" onclick="togglePwd('r-pwd',this)" style="position:absolute;right:12px;background:none;border:none;cursor:pointer;color:#999;padding:0;display:flex;align-items:center;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="pw-bar"><div class="pw-fill" id="pw-fill"></div></div>
+        <div class="pw-lbl" id="pw-lbl">Entrez un mot de passe</div>
+      </div>
+      <div class="afg"><label>Confirmer</label><div style="position:relative;display:flex;align-items:center">
+            <input type="password" id="r-pwd2" placeholder="Répétez le mot de passe" style="width:100%;padding-right:40px;box-sizing:border-box">
+            <button type="button" onclick="togglePwd('r-pwd2',this)" style="position:absolute;right:12px;background:none;border:none;cursor:pointer;color:#999;padding:0;display:flex;align-items:center;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div></div>
+      <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer;font-size:12.5px;color:var(--mu)">
+        <input type="checkbox" id="r-cgu" style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
+        J'accepte les <a style="color:var(--g);font-weight:600;margin:0 3px">conditions d'utilisation</a>
+      </label>
+      <button class="abtn" onclick="doRegister()">Créer mon compte</button>
+    </div>
+    <div class="alink">Déjà un compte ? <a onclick="showScreen('login')">Se connecter</a></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     APPLICATION PRINCIPALE
+     ═══════════════════════════════════════ -->
+<div class="app" id="app">
+
+  <!-- ── Sidebar ── -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="slogo">
+      <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=200&h=200&fit=crop" class="slogo-img" alt="SuperMarché CM">
+      <div class="slogo-txt">
+        <h1>Super<span>Marché</span> CM</h1>
+        <p>Gestion & Administration</p>
+      </div>
+    </div>
+
+    <div class="nsec">
+      <div class="nlbl">Principal</div>
+      <div class="nv active" onclick="goPage('dashboard')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=40&h=40&fit=crop" alt=""></div>Tableau de bord
+      </div>
+      <div class="nv" onclick="goPage('supermarches')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?w=200&h=200&fit=crop" alt=""></div>Supermarchés
+      </div>
+      <div class="nv" onclick="goPage('produits')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=40&h=40&fit=crop" alt=""></div>Produits
+        <span class="nbg" id="b-prod">0</span>
+      </div>
+      <div class="nv" onclick="goPage('achats')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=40&h=40&fit=crop" alt=""></div>Achats
+        <span class="nbg" id="b-pan">0</span>
+      </div>
+      <div class="nv" onclick="goPage('commandes')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?w=40&h=40&fit=crop" alt=""></div>Commandes
+        <span class="nbg" id="b-cmd">0</span>
+      </div>
+      <div class="nv" onclick="goPage('ventes')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=40&h=40&fit=crop" alt=""></div>Ventes
+      </div>
+      <div class="nv" onclick="goPage('invitations')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Invitations</span>
+      </div>
+      <div class="nv" onclick="goPage('employes')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=40&h=40&fit=crop" alt=""></div>Employés
+      </div>
+    </div>
+
+    <div class="nsec">
+      <div class="nlbl">Gestion</div>
+      <div class="nv" onclick="goPage('fournisseurs')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=40&h=40&fit=crop" alt=""></div>Fournisseurs
+      </div>
+      <div class="nv" onclick="goPage('rapports')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=40&h=40&fit=crop" alt=""></div>Rapports
+      </div>
+      <div class="nv" onclick="goPage('ia')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" alt=""></div>Assistant IA
+        <span class="nbg new">IA</span>
+      </div>
+      <div class="nv" onclick="goPage('reseaux')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=40&h=40&fit=crop" alt=""></div>Réseaux sociaux
+      </div>
+      <div class="nv" onclick="goPage('livraison')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1525480122447-64809d765ec4?w=40&h=40&fit=crop" alt=""></div>Livraison
+      </div>
+      <div class="nv" onclick="goPage('confidentialite')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=40&h=40&fit=crop" alt=""></div>Confidentialité
+      </div>
+      <div class="nv" onclick="goPage('faq')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=40&h=40&fit=crop" alt=""></div>FAQ
+      </div>
+      <div class="nv" onclick="goPage('livraisons-admin')">
+        <div class="nv-ico"><img src="https://img.icons8.com/ios/24/007A3D/delivery-truck.png" alt="livraison" style="width:20px;height:20px;vertical-align:middle"></div>Livraisons
+      </div>
+      <div class="nv" onclick="goPage('livreurs')">
+        <div class="nv-ico">🏍️</div>Livreurs
+      </div>
+      <div class="nv" onclick="goPage('promotions')">
+        <div class="nv-ico"><img src="https://img.icons8.com/ios/24/007A3D/price-tag.png" alt="promo" style="width:20px;height:20px;vertical-align:middle"></div>Promotions
+      </div>
+      <div class="nv" onclick="goPage('fidelite')">
+        <div class="nv-ico"><img src="https://img.icons8.com/ios/24/007A3D/star.png" alt="fidelite" style="width:20px;height:20px;vertical-align:middle"></div>Fidélité
+      </div>
+      <div class="nv" onclick="goPage('utilisateurs')">
+        <div class="nv-ico"><img src="https://img.icons8.com/ios/24/007A3D/conference-call.png" alt="utilisateurs" style="width:20px;height:20px;vertical-align:middle"></div>Utilisateurs
+      </div>
+      <div class="nv" onclick="goPage('retours')">
+        <div class="nv-ico">↩️</div>Retours
+      </div>
+      <div class="nv" onclick="goPage('stats-clients')">
+        <div class="nv-ico"><img src="https://img.icons8.com/ios/24/007A3D/bar-chart.png" alt="statistiques" style="width:20px;height:20px;vertical-align:middle"></div>Stats clients
+      </div>
+      <div class="nv" onclick="goPage('parametres')">
+        <div class="nv-ico"><img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=40&h=40&fit=crop" alt=""></div>Paramètres
+      </div>
+    </div>
+
+    <div class="sfoot">
+      <div class="ucard">
+        <div class="uava" id="user-ava">AD</div>
+        <div class="uinf">
+          <p id="user-name">Administrateur</p>
+          <span id="user-email">lembetiny02@gmail.com</span>
+          <div id="user-role-badge" style="margin-top:4px"></div>
+        </div>
+      </div>
+      <div class="lout" onclick="doLogout()">Déconnexion</div>
+    </div>
+  </aside>
+
+  <!-- ── Zone principale ── -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <button class="burger-btn" id="burgerBtn" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="ttl" id="page-title">Tableau de bord</div>
+      <div class="tright">
+        <div class="sbox">
+          <img src="https://images.unsplash.com/photo-1572435555646-7ad9a149ad91?w=40&h=40&fit=crop" alt="">
+          <input type="text" placeholder="Rechercher...">
+        </div>
+        <div class="ib" onclick="toggleNotif()">
+          <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=40&h=40&fit=crop" alt="Notifications">
+          <div class="ndot" id="ndot"></div>
+        </div>
+        <div class="ib" onclick="toggleDark()">
+          <img src="https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=40&h=40&fit=crop" alt="Mode sombre">
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ TABLEAU DE BORD ════════════════════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop" class="ptitle-img" alt="">
+        <div>
+          <div class="flag"></div>
+          <h2>Tableau de bord</h2>
+          <p>Vue d'ensemble de votre réseau de supermarchés</p>
+        </div>
+      </div>
+      <div class="sg">
+        <div class="sc" onclick="goPage('supermarches')" style="cursor:pointer">
+          <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=200&h=200&fit=crop" class="sc-img">
+          <img src="https://images.unsplash.com/photo-1519566335946-e6f65f0f4fdf?w=200&h=200&fit=crop" class="sico-img" alt="">
+          <div class="slbl">Supermarchés</div>
+          <div class="sval" id="dash-supermarches">—</div>
+          <div class="schg sup" id="dash-supermarches-sub">actifs</div>
+        </div>
+        <div class="sc" onclick="goPage('rapports')" style="cursor:pointer">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=100&fit=crop" class="sc-img">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=100&fit=crop" class="sico-img" alt="">
+          <div class="slbl">CA mensuel</div>
+          <div class="sval" id="dash-ca">—</div>
+          <div class="schg sup" id="dash-ca-sub">ce mois</div>
+        </div>
+        <div class="sc" onclick="goPage('produits')" style="cursor:pointer">
+          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop" class="sc-img">
+          <img src="https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=40&h=40&fit=crop" class="sico-img" alt="">
+          <div class="slbl">Ruptures stock</div>
+          <div class="sval" id="dash-ruptures">—</div>
+          <div class="schg" id="dash-ruptures-sub">produits</div>
+        </div>
+        <div class="sc" onclick="goPage('commandes')" style="cursor:pointer">
+          <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=40&h=40&fit=crop" class="sc-img">
+          <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=40&h=40&fit=crop" class="sico-img" alt="">
+          <div class="slbl">Commandes actives</div>
+          <div class="sval" id="dash-commandes">—</div>
+          <div class="schg" id="dash-commandes-sub">en cours</div>
+        </div>
+        <div class="sc" onclick="goPage('employes')" style="cursor:pointer">
+          <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=40&h=40&fit=crop" class="sc-img">
+          <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=40&h=40&fit=crop" class="sico-img" alt="">
+          <div class="slbl">Clients inscrits</div>
+          <div class="sval" id="dash-clients">—</div>
+          <div class="schg sup" id="dash-clients-sub">sur la boutique</div>
+        </div>
+        <div class="sc" onclick="goPage('produits')" style="cursor:pointer">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" class="sc-img">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" class="sico-img" alt="">
+          <div class="slbl">Total produits</div>
+          <div class="sval" id="dash-produits">—</div>
+          <div class="schg sup" id="dash-produits-sub">en catalogue</div>
+        </div>
+      </div>
+      <div class="tc">
+        <div class="cd">
+          <div class="ch">
+            <div class="ct">Ventes semaine (FCFA)</div>
+            <a class="ca" onclick="goPage('rapports')">Voir rapport</a>
+          </div>
+          <div class="mb" id="weekBars"></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mu);margin-top:3px">
+            <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+          </div>
+        </div>
+        <div class="cd">
+          <div class="ch">
+            <div class="ct">Alertes stock</div>
+            <span class="badge bgr">12 alertes</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+                <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200&h=200&fit=crop" style="width:22px;height:22px;border-radius:5px;object-fit:cover">
+                <span style="font-size:12px;flex:1">Huile palme 5L</span>
+                <span style="color:var(--r);font-weight:700;font-size:12px">3 u.</span>
+              </div>
+              <div class="pb"><div class="pf" style="width:6%;background:var(--r)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+                <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=200&h=200&fit=crop" style="width:22px;height:22px;border-radius:5px;object-fit:cover">
+                <span style="font-size:12px;flex:1">Lait Dano 400g</span>
+                <span style="color:var(--r);font-weight:700;font-size:12px">8 u.</span>
+              </div>
+              <div class="pb"><div class="pf" style="width:16%;background:var(--r)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+                <img src="https://images.unsplash.com/photo-1581996322890-f59ee5f254c0?w=200&h=200&fit=crop" style="width:22px;height:22px;border-radius:5px;object-fit:cover">
+                <span style="font-size:12px;flex:1">Sucre cristal 1kg</span>
+                <span style="color:#B8860B;font-weight:700;font-size:12px">15 u.</span>
+              </div>
+              <div class="pb"><div class="pf" style="width:30%;background:var(--y)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+                <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop" style="width:22px;height:22px;border-radius:5px;object-fit:cover">
+                <span style="font-size:12px;flex:1">Riz parfumé 25kg</span>
+                <span style="color:var(--g);font-weight:700;font-size:12px">87 u.</span>
+              </div>
+              <div class="pb"><div class="pf" style="width:87%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+        <div class="cd" style="cursor:pointer" onclick="goPage('ia')">
+          <div style="display:flex;align-items:center;gap:14px;padding:3px">
+            <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" style="width:50px;height:50px;border-radius:11px;object-fit:cover;flex-shrink:0">
+            <div style="flex:1">
+              <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:3px">Assistant IA disponible</div>
+              <div style="font-size:12.5px;color:var(--mu)">Conseils de gestion adaptés au Cameroun.</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;background:#E8F5EF;padding:5px 11px;border-radius:20px;color:var(--g);font-size:12px;font-weight:600;flex-shrink:0">
+              <span style="width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;animation:pulse 2s infinite"></span>En ligne
+            </div>
+          </div>
+        </div>
+        <div class="cd" style="cursor:pointer;background:linear-gradient(135deg,var(--gd),var(--g))" onclick="openBoutique()">
+          <div style="display:flex;align-items:center;gap:14px;padding:3px">
+            <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=200&h=200&fit=crop" style="width:50px;height:50px;border-radius:11px;object-fit:cover;flex-shrink:0">
+            <div style="flex:1">
+              <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:3px;color:#fff">Boutique en ligne</div>
+              <div style="font-size:12.5px;color:rgba(255,255,255,.75)">Page publique clients — commandes et paiements Mobile Money</div>
+            </div>
+            <div style="background:var(--y);color:var(--gd);padding:5px 11px;border-radius:20px;font-size:12px;font-weight:700;flex-shrink:0">
+              Ouvrir
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ SUPERMARCHÉS ════════════════════ -->
+    <div class="page" id="page-supermarches">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=200&h=200&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Supermarchés</h2><p>Vos points de vente</p></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:13px">
+        <button class="btn bp" onclick="openM('m-sm')">+ Ajouter un supermarché</button>
+      </div>
+      <div class="sml" id="sml"></div>
+    </div>
+
+    <!-- ════════════════════ PRODUITS ════════════════════ -->
+    <div class="page" id="page-produits">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Produits & Stock</h2><p>Inventaire complet de vos produits</p></div>
+      </div>
+      <div style="display:flex;gap:7px;margin-bottom:13px">
+        <button class="btn bp" onclick="openM('m-prod')">+ Ajouter un produit</button>
+        <button class="btn bo" onclick="toast('Export généré !','success')">Exporter CSV</button>
+      </div>
+      <div class="cd">
+        <div class="ch">
+          <div class="ct">Catalogue produits</div>
+          <span class="badge bgr" id="rupt-badge">0 ruptures</span>
+        </div>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>Produit</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Supermarché</th><th>Statut</th><th>Action</th></tr>
+            </thead>
+            <tbody id="prod-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ ACHATS ════════════════════ -->
+    <div class="page" id="page-achats">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Achats</h2><p>Constituez votre panier depuis le catalogue</p></div>
+      </div>
+      <div class="aflt">
+        <select id="f-sm" onchange="renderCat()">
+          <option value="">Tous les supermarchés</option>
+          <option>Tous</option>
+        </select>
+        <select id="f-cat" onchange="renderCat()">
+          <option value="">Toutes catégories</option>
+          <option>Alimentation</option><option>Boissons</option><option>Hygiène</option><option>Laitiers</option><option>Boulangerie</option><option>Beauté</option><option>Numérique</option><option>Téléphonie</option><option>Accessoires</option><option>Formation Digitale</option><option>Condiments &amp; Epices</option><option>Bebe &amp; Maternite</option><option>Articles Menagers</option><option>Eau &amp; Eau Minerale</option><option>Surgeles &amp; Conserves</option><option>Papeterie &amp; Fournitures</option>
+          </select>
+        <input type="text" id="f-srch" oninput="renderCat()" placeholder="Rechercher un produit...">
+        <button class="btn bp" style="margin-left:auto" onclick="openPanier()">
+          Panier (<span id="pb-cnt">0</span>) — <span id="pb-tot">0 FCFA</span>
+        </button>
+      </div>
+      <div class="agrid" id="agrid"></div>
+    </div>
+
+    <!-- ════════════════════ COMMANDES ════════════════════ -->
+    <div class="page" id="page-commandes">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Commandes</h2><p>Suivi en temps réel de toutes vos commandes</p></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px">
+        <div class="ftabs">
+          <button class="ft active" onclick="filterCmd('',this)">Toutes</button>
+          <button class="ft" onclick="filterCmd('en_attente',this)">En attente</button>
+          <button class="ft" onclick="filterCmd('confirmee',this)">Confirmées</button>
+          <button class="ft" onclick="filterCmd('livraison',this)">En livraison</button>
+          <button class="ft" onclick="filterCmd('livree',this)">Livrées</button>
+          <button class="ft" onclick="filterCmd('annulee',this)">Annulées</button>
+        </div>
+        <button class="btn bp" onclick="openM('m-cmd')">+ Nouvelle commande</button>
+      </div>
+      <div id="cmd-list"></div>
+    </div>
+
+    <!-- ════════════════════ VENTES ════════════════════ -->
+    <div class="page" id="page-ventes">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Ventes & Caisse</h2></div>
+      </div>
+      <div class="sg">
+        <div class="sc"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">Ventes aujourd'hui</div><div class="sval" id="v-today">—</div><div class="schg sup" id="v-today-sub">ce jour</div></div>
+        <div class="sc"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">Transactions</div><div class="sval" id="v-transactions">—</div><div class="schg sup" id="v-trans-sub">total</div></div>
+        <div class="sc"><img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">Panier moyen</div><div class="sval" id="v-panier">—</div><div class="schg sup">FCFA</div></div>
+        <div class="sc"><img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">En attente</div><div class="sval" id="v-attente">—</div><div class="schg sdn" id="v-attente-sub">commandes</div></div>
+      </div>
+      <div class="cd">
+        <div class="ch">
+          <div class="ct">Historique des commandes</div>
+          <div style="display:flex;gap:8px">
+            <select id="v-filtre" onchange="renderVentes()" style="padding:6px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:13px;outline:none">
+              <option value="tout">Toutes</option>
+              <option value="livree">Livrées</option>
+              <option value="en_attente">En attente</option>
+              <option value="confirmee">Confirmées</option>
+              <option value="annulee">Annulées</option>
+            </select>
+          </div>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Commande</th><th>Date</th><th>Client</th><th>Supermarché</th><th>Montant</th><th>Paiement</th><th>Statut</th></tr></thead>
+            <tbody id="v-tbody"><tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ EMPLOYÉS ════════════════════ -->
+    <!-- ════════════════════ INVITATIONS ════════════════════ -->
+    <div class="page" id="page-invitations">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=200&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Codes d'invitation</h2><p>Gérez l'accès des gérants à l'application</p></div>
+      </div>
+
+      <!-- Créer un code -->
+      <div class="cd" style="margin-bottom:16px">
+        <div class="ch"><div class="ct">🔑 Créer un nouveau code</div></div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:4px 0">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <label style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase">Rôle du gérant</label>
+            <select id="inv-role" style="padding:9px 12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;outline:none">
+              <option value="Gérant(e)">Gérant(e)</option>
+              <option value="Directeur(trice)">Directeur(trice)</option>
+              <option value="Propriétaire">Propriétaire</option>
+              <option value="Caissier(e)">Caissier(e)</option>
+              <option value="Livreur">Livreur</option>
+            </select>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <label style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase">Nb max utilisations</label>
+            <input type="number" id="inv-max" value="1" min="1" max="50" style="padding:9px 12px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;width:80px;outline:none">
+          </div>
+          <button class="btn bp" onclick="genererCode()" style="padding:10px 20px">
+            + Générer un code
+          </button>
+        </div>
+        <div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border-radius:10px;font-size:13px;color:#007A3D">
+          💡 Copiez le code et envoyez-le au gérant par WhatsApp ou SMS. Il devra l'entrer lors de son inscription.
+        </div>
+      </div>
+
+      <!-- Liste des codes -->
+      <div class="cd">
+        <div class="ch"><div class="ct">Codes actifs</div></div>
+        <div id="inv-liste" style="padding:4px 0">
+          <p style="color:#999;text-align:center;padding:12px">Chargement...</p>
+        </div>
+      </div>
+
+      <!-- Liste des gérants inscrits -->
+      <div class="cd" style="margin-top:16px">
+        <div class="ch"><div class="ct">Gérants inscrits</div></div>
+        <div id="gerants-liste">
+          <p style="color:#999;text-align:center;padding:12px">Chargement...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-employes">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Employés</h2></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:13px">
+        <button class="btn bp" onclick="openM('m-emp')">+ Ajouter un employé</button>
+      </div>
+      <div class="cd">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Employé</th><th>Poste</th><th>Supermarché</th><th>Téléphone</th><th>Salaire</th><th>Statut</th></tr></thead>
+            <tbody id="emp-tbody"><tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ FOURNISSEURS ════════════════════ -->
+    <div class="page" id="page-fournisseurs">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Fournisseurs</h2></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:13px">
+        <button class="btn bp" onclick="openM('m-four')">+ Ajouter fournisseur</button>
+      </div>
+      <div class="cd">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Fournisseur</th><th>Catégorie</th><th>Contact</th><th>Ville</th><th>Montant dû</th><th>Statut</th></tr></thead>
+            <tbody id="four-tbody"><tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ RAPPORTS ════════════════════ -->
+    <div class="page" id="page-rapports">
+      <div class="ptitle" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+          <div><div class="flag"></div><h2>Rapports</h2></div>
+        </div>
+        <button class="btn bp" onclick="imprimerRapport()" style="display:flex;align-items:center;gap:6px;padding:10px 18px">
+          🖨️ Imprimer le rapport
+        </button>
+      </div>
+      <div class="sg">
+        <div class="sc"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">CA ce mois</div><div class="sval" id="ventes-ca-mois">—</div><div class="schg sup" id="ventes-ca-sub">ce mois</div></div>
+        <div class="sc"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">Marge brute</div><div class="sval" id="rpt-marge">—</div><div class="schg sup" id="rpt-marge-sub">calculé</div></div>
+        <div class="sc"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=100&h=100&fit=crop" class="sico-img" alt=""><div class="slbl">Rotation stock</div><div class="sval" id="rpt-rotation">—</div><div class="schg sup">rotation/mois</div></div>
+        <div class="sc"><img src="https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?w=40&h=40&fit=crop" class="sico-img" alt=""><div class="slbl">Commandes actives</div><div class="sval" id="rpt-c">0</div></div>
+      </div>
+      <div class="twc">
+        <div class="cd">
+          <div class="ch"><div class="ct">Ventes 2025</div></div>
+          <div class="mb" style="height:90px" id="monthBars"></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--mu);margin-top:3px">
+            <span>Jan</span><span>Fév</span><span>Mar</span><span>Avr</span><span>Mai</span><span>Jun</span><span>Jul</span><span>Aoû</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Déc</span>
+          </div>
+        </div>
+        <div class="cd">
+          <div class="ch"><div class="ct">Top catégories</div></div>
+          <div id="rpt-top-cats" style="display:flex;flex-direction:column;gap:9px"><p style="color:#999;font-size:13px;text-align:center">Calculé depuis vos commandes</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ ASSISTANT IA ════════════════════ -->
+    <div class="page" id="page-ia">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" class="ptitle-img" alt="IA">
+        <div><div class="flag"></div><h2>Assistant IA</h2><p>Powered by Claude — Votre conseiller en gestion de supermarchés</p></div>
+      </div>
+      <div class="ai-wrap">
+        <div class="ai-side">
+          <div class="ai-card">
+            <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&h=300&fit=crop" class="ai-card-bg" alt="">
+            <div class="ai-card-overlay">
+              <div class="ai-card-ava"><img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" alt="IA"></div>
+              <h3>Assistant SuperMarché CM</h3>
+              <p>Données temps réel — Claude by Anthropic</p>
+              <div class="ai-online">En ligne</div>
+            </div>
+          </div>
+          <div class="ai-topics">
+            <h4>Suggestions</h4>
+            <button class="atbtn" onclick="askAI('Quels produits sont en rupture ou stock critique ? Que recommandes-tu ?')">
+              <img src="https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=40&h=40&fit=crop" alt="">Analyse des stocks
+            </button>
+            <button class="atbtn" onclick="askAI('Analyse les ventes de cette semaine et donne 3 recommandations.')">
+              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=100&fit=crop" alt="">Analyse des ventes
+            </button>
+            <button class="atbtn" onclick="askAI('Comment optimiser les commandes fournisseurs au Cameroun ?')">
+              <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=40&h=40&fit=crop" alt="">Optimiser commandes
+            </button>
+            <button class="atbtn" onclick="askAI('Meilleures pratiques pour réduire les pertes en supermarché au Cameroun ?')">
+              <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=100&h=100&fit=crop" alt="">Réduire les pertes
+            </button>
+            <button class="atbtn" onclick="askAI('Analyse complète de la performance de mon réseau de supermarchés.')">
+              <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=40&h=40&fit=crop" alt="">Performance réseau
+            </button>
+          </div>
+          <div class="ai-stats">
+            <h4>Données actuelles</h4>
+            <div class="aisr"><span>CA mensuel</span><span id="ia-ca">— FCFA</span></div>
+            <div class="aisr"><span>Stock critique</span><span id="ai-rupt">0</span></div>
+            <div class="aisr"><span>Cmd. actives</span><span id="ai-cmds">0</span></div>
+            <div class="aisr"><span>Clients boutique</span><span id="ia-clients">—</span></div>
+          </div>
+        </div>
+        <div class="ai-chat">
+          <div class="ai-chdr">
+            <div class="ai-chdr-ava"><img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" alt="IA"></div>
+            <div class="ai-chdr-inf">
+              <h4>Assistant SuperMarché CM</h4>
+              <span>En ligne — Powered by Claude</span>
+            </div>
+            <div class="ai-chdr-act">
+              <button class="btn bo bsm" onclick="clearChat()">Effacer</button>
+            </div>
+          </div>
+          <div class="ai-msgs" id="ai-msgs"></div>
+          <div class="ai-hint">Entrée pour envoyer — Maj+Entrée pour nouvelle ligne</div>
+          <div class="ai-inp-wrap">
+            <textarea class="ai-inp" id="ai-inp"
+              placeholder="Posez votre question sur la gestion de vos supermarchés..."
+              onkeydown="aiKeyDown(event)"></textarea>
+            <button class="ai-send" id="ai-send-btn" onclick="sendAI()">&#x279C;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ RÉSEAUX SOCIAUX ════════════════════ -->
+    <div class="page" id="page-reseaux">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Réseaux Sociaux</h2><p>Suivez SuperMarché CM sur les réseaux</p></div>
+      </div>
+      <div class="cb">
+        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=900&h=160&fit=crop" class="cb-bg" alt="">
+        <div class="cb-overlay">
+          <div class="cb-txt" style="flex:1">
+            <h3>Rejoignez notre communauté digitale !</h3>
+            <p>Retrouvez SuperMarché CM sur Facebook, Threads, YouTube et WhatsApp Business.</p>
+            <button class="cb-btn" onclick="toast('Merci de nous suivre !','success')">Suivre nos comptes</button>
+          </div>
+        </div>
+      </div>
+      <div class="ss-grid">
+        <div class="ss-card"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=200&h=50&fit=crop" class="ss-card-img" alt=""><div class="ss-val" id="ss-clients">—</div><div class="ss-lbl">Clients inscrits</div></div>
+        <div class="ss-card"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=50&fit=crop" class="ss-card-img" alt=""><div class="ss-val" id="ss-commandes">—</div><div class="ss-lbl">Commandes traitées</div></div>
+        <div class="ss-card"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=200&h=50&fit=crop" class="ss-card-img" alt=""><div class="ss-val">4</div><div class="ss-lbl">Réseaux actifs</div></div>
+        <div class="ss-card"><img src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=200&h=50&fit=crop" class="ss-card-img" alt=""><div class="ss-val" id="ss-villes">—</div><div class="ss-lbl">Villes couvertes</div></div>
+      </div>
+      <div class="social-grid">
+
+        <!-- Facebook -->
+        <div class="social-card" onclick="window.open('https://www.facebook.com/idriss.lembe.2025','_blank')">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=90&fit=crop" class="social-card-img" alt="Facebook">
+          <div class="social-card-body" style="border-top:3px solid #1877F2">
+            <h4>Facebook</h4>
+            <p>Actualités, promotions et offres spéciales chaque semaine</p>
+            <span class="fol" style="background:#E7F3FF;color:#1877F2">@idriss.lembe.2025</span>
+          </div>
+        </div>
+
+        <!-- Threads -->
+        <div class="social-card" onclick="window.open('https://www.threads.com/@ngapetlembeidriss','_blank')">
+          <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=300&h=90&fit=crop" class="social-card-img" alt="Threads">
+          <div class="social-card-body" style="border-top:3px solid #010101">
+            <h4>Threads</h4>
+            <p>Discussions, avis clients et actualités SuperMarché CM</p>
+            <span class="fol" style="background:#f0f0f0;color:#010101">@ngapetlembeidriss</span>
+          </div>
+        </div>
+
+        <!-- WhatsApp Business -->
+        <div class="social-card" onclick="window.open('https://wa.me/237693591479','_blank')">
+          <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=300&h=90&fit=crop" class="social-card-img" alt="WhatsApp">
+          <div class="social-card-body" style="border-top:3px solid #25D366">
+            <h4>WhatsApp Business</h4>
+            <p>Commandez directement et recevez le suivi de votre livraison en temps réel</p>
+            <span class="fol" style="background:#DCF8C6;color:#128C7E">+237 693 59 14 79</span>
+          </div>
+        </div>
+
+        <!-- YouTube -->
+        <div class="social-card" onclick="window.open('https://youtube.com/@idrisscarlos-ov5kq','_blank')">
+          <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=300&h=90&fit=crop" class="social-card-img" alt="YouTube">
+          <div class="social-card-body" style="border-top:3px solid #FF0000">
+            <h4>YouTube</h4>
+            <p>Tutoriels gestion, recettes et vidéos produits camerounais</p>
+            <span class="fol" style="background:#FFE0E0;color:#FF0000">@idrisscarlos-ov5kq</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════════════════ LIVRAISON ════════════════════ -->
+    <div class="page" id="page-livraison">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1525480122447-64809d765ec4?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Conditions de Livraison</h2><p>Tout savoir sur nos services de livraison au Cameroun</p></div>
+      </div>
+      <div class="lw">
+        <div style="margin-bottom:18px">
+          <span class="lbadge">Livraison disponible</span>
+          <span class="lbadge">Tout le Cameroun</span>
+        </div>
+        <div class="dg">
+          <div class="dv"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=80&fit=crop" class="dv-img" alt="Express"><div class="dv-body"><h4>Livraison Express</h4><p>En 2 à 4 heures dans les villes principales.</p><span class="db" style="background:#E3F0FC;color:#0078D4">2-4 heures</span></div></div>
+          <div class="dv"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=300&h=80&fit=crop" class="dv-img" alt="Standard"><div class="dv-body"><h4>Livraison Standard</h4><p>Livraison le lendemain ou dans les 48h.</p><span class="db" style="background:#E8F5EF;color:var(--g)">24 à 48h</span></div></div>
+          <div class="dv"><img src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=300&h=80&fit=crop" class="dv-img" alt="Retrait"><div class="dv-body"><h4>Retrait en magasin</h4><p>Commandez en ligne et retirez gratuitement.</p><span class="db" style="background:#FEF9E7;color:#B8860B">Gratuit</span></div></div>
+        </div>
+        <div class="ls">
+          <h3>Comment fonctionne notre livraison ?</h3>
+          <div class="ds-wrap">
+            <div class="ds"><div class="ds-dot"><img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=100&h=100&fit=crop" alt=""></div><div class="ds-n">Commande</div><div class="ds-d">En ligne</div></div>
+            <div class="ds"><div class="ds-dot"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop" alt=""></div><div class="ds-n">Confirmation</div><div class="ds-d">SMS + WhatsApp</div></div>
+            <div class="ds"><div class="ds-dot"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=100&h=100&fit=crop" alt=""></div><div class="ds-n">Préparation</div><div class="ds-d">Emballage soigné</div></div>
+            <div class="ds"><div class="ds-dot"><img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=100&h=100&fit=crop" alt=""></div><div class="ds-n">Livraison</div><div class="ds-d">Suivi temps réel</div></div>
+            <div class="ds"><div class="ds-dot"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=100&h=100&fit=crop" alt=""></div><div class="ds-n">Réception</div><div class="ds-d">Vérifiez et signez</div></div>
+          </div>
+        </div>
+        <div class="ls">
+          <h3>Tarifs de livraison</h3>
+          <div class="lhi">Livraison GRATUITE pour toute commande supérieure à 50 000 FCFA (zones 1 et 2).</div>
+          <table class="ptbl">
+            <thead><tr><th>Zone</th><th>Villes</th><th>Délai</th><th>Tarif</th></tr></thead>
+            <tbody>
+              <tr><td>Zone 1 — Centre-ville</td><td>Yaoundé Centre, Douala Akwa</td><td>2-4h</td><td class="pfree">2 000 FCFA</td></tr>
+              <tr><td>Zone 2 — Périphérie</td><td>Yaoundé banlieue, Douala périph.</td><td>4-8h</td><td>3 500 FCFA</td></tr>
+              <tr><td>Zone 3 — Grandes villes</td><td>Bafoussam, Garoua, Maroua</td><td>24h</td><td>5 000 FCFA</td></tr>
+              <tr><td>Zone 4 — Villes secondaires</td><td>Kribi, Limbé, Ngaoundéré</td><td>48h</td><td>7 500 FCFA</td></tr>
+              <tr><td colspan="3" style="font-weight:700;color:var(--g)">Commande &gt;= 50 000 FCFA (zones 1 &amp; 2)</td><td class="pfree">GRATUIT</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ls">
+          <h3>Conditions générales</h3>
+          <h4>Horaires</h4>
+          <ul><li>Lundi au Samedi : 8h à 20h</li><li>Dimanche : 9h à 17h</li><li>Jours fériés : service réduit</li></ul>
+          <h4>Modes de paiement</h4>
+          <ul><li>Espèces à la livraison</li><li>MTN Mobile Money et Orange Money</li><li>Carte bancaire (Visa, Mastercard)</li></ul>
+          <div class="lhi">Service client : +237 683 39 22 68 (7j/7, 8h-20h)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ CONFIDENTIALITÉ ════════════════════ -->
+    <div class="page" id="page-confidentialite">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Politique de Confidentialité</h2><p>Comment nous protégeons vos données personnelles</p></div>
+      </div>
+      <div class="lw">
+        <div style="margin-bottom:18px">
+          <span class="lbadge">Données sécurisées</span>
+          <span class="lbadge">Conformité droit camerounais</span>
+          <span class="lbadge" style="background:#FEF9E7;color:#B8860B">Mise à jour : 28/02/2025</span>
+        </div>
+        <div class="ls"><h3>1. Qui sommes-nous ?</h3><p><strong>SuperMarché CM SARL</strong>, enregistrée au RCCM de Yaoundé. Email DPD : dpo@supermarche.cm</p></div>
+        <div class="ls"><h3>2. Données collectées</h3><h4>Données que vous fournissez</h4><ul><li>Identité : prénom, nom</li><li>Contact : email, téléphone</li><li>Identifiants : email et mot de passe chiffré</li></ul><div class="lwa">Nous ne collectons jamais de données sensibles (opinions politiques, religieuses, santé).</div></div>
+        <div class="ls"><h3>3. Protection de vos données</h3><ul><li>Chiffrement AES-256 des données stockées</li><li>HTTPS/TLS 1.3 pour toutes les communications</li><li>Serveurs hébergés au Cameroun (Camtel Data Center)</li></ul><div class="lhi">L'Assistant IA est propulsé par Claude (Anthropic). Vos conversations sont sécurisées et supprimées après 30 jours.</div></div>
+        <div class="ls"><h3>4. Vos droits</h3><ul><li>Droit d'accès, rectification, effacement et portabilité</li><li>Contact DPD : dpo@supermarche.cm — Réponse sous 30 jours</li></ul></div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ FAQ ════════════════════ -->
+    <div class="page" id="page-faq">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>FAQ & Centre d'aide</h2><p>Trouvez rapidement des réponses à vos questions</p></div>
+      </div>
+      <div class="faq-cats">
+        <button class="faq-cat active" onclick="filterFaq('all',this)">Toutes</button>
+        <button class="faq-cat" onclick="filterFaq('compte',this)">Mon compte</button>
+        <button class="faq-cat" onclick="filterFaq('commande',this)">Commandes</button>
+        <button class="faq-cat" onclick="filterFaq('livraison',this)">Livraison</button>
+        <button class="faq-cat" onclick="filterFaq('paiement',this)">Paiement</button>
+        <button class="faq-cat" onclick="filterFaq('ia',this)">Assistant IA</button>
+        <button class="faq-cat" onclick="filterFaq('stock',this)">Stock</button>
+      </div>
+      <div id="faq-list"></div>
+      <div class="cd" style="text-align:center;padding:22px;margin-top:7px">
+        <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&h=200&fit=crop" style="width:70px;height:70px;border-radius:14px;object-fit:cover;margin-bottom:11px">
+        <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:7px">Pas trouvé votre réponse ?</div>
+        <p style="font-size:13px;color:var(--mu);margin-bottom:14px">Notre Assistant IA répond à toutes vos questions 24h/24</p>
+        <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
+          <button class="btn bp" onclick="goPage('ia')">Demander à l'IA</button>
+          <button class="btn bo" onclick="toast('Email envoyé à support@supermarche.cm','success')">Contacter support</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════ PARAMÈTRES ════════════════════ -->
+    <div class="page" id="page-parametres">
+      <div class="ptitle">
+        <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=40&h=40&fit=crop" class="ptitle-img" alt="">
+        <div><div class="flag"></div><h2>Paramètres</h2><p>Personnalisez votre boutique</p></div>
+      </div>
+
+      <!-- Bandeau info -->
+      <div style="background:#e8f5ef;border:1px solid #b7dfc9;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#005229">
+        <img src="https://img.icons8.com/ios/24/007A3D/idea.png" alt="conseil" style="width:18px;height:18px;vertical-align:middle"> <strong>Ces informations s'affichent dans le footer de votre boutique en ligne.</strong> Modifiez-les puis cliquez Sauvegarder.
+      </div>
+
+      <div class="twc">
+
+        <!-- CARTE 1 : Infos boutique -->
+        <div class="cd" style="grid-column:1/-1">
+          <div class="ch"><div class="ct"><img src="https://img.icons8.com/ios/24/007A3D/shop.png" alt="supermarche" style="width:20px;height:20px;vertical-align:middle"> Informations de la boutique (footer client)</div></div>
+          <div class="fg2">
+            <div class="fg ff"><label>Nom de la boutique</label><input type="text" id="cfg-nom" placeholder="SuperMarché CM"></div>
+            <div class="fg ff"><label>Description courte</label><input type="text" id="cfg-desc" placeholder="La première plateforme de courses en ligne au Cameroun..."></div>
+            <div class="fg"><label>Adresse</label><input type="text" id="cfg-adresse" placeholder="Bepanda, Douala, Cameroun"></div>
+            <div class="fg"><label>Téléphone principal</label><input type="tel" id="cfg-tel" placeholder="+237 683 39 22 68"></div>
+            <div class="fg"><label>Email</label><input type="email" id="cfg-email" placeholder="lembetiny02@gmail.com"></div>
+            <div class="fg"><label>Numéro WhatsApp</label><input type="tel" id="cfg-wa" placeholder="237683392268"></div>
+            <div class="fg"><label>Année copyright</label><input type="text" id="cfg-annee" placeholder="2025"></div>
+            <div class="fg"><label>Devise</label>
+              <select id="cfg-devise"><option value="FCFA">FCFA</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
+            </div>
+          </div>
+          <div style="margin-top:14px">
+            <div style="font-size:12px;font-weight:600;color:var(--mu);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Numéro marchand Mobile Money (affiché dans les instructions de paiement)</div>
+            <div class="fg2">
+              <div class="fg"><label>Numéro marchand MTN MoMo</label><input type="tel" id="cfg-mtn" placeholder="683 39 22 68"></div>
+              <div class="fg"><label>Numéro marchand Orange Money</label><input type="tel" id="cfg-orange" placeholder="699 000 000"></div>
+            </div>
+          </div>
+          <div class="btng" style="margin-top:16px">
+            <button class="btn bp" onclick="sauvegarderConfig()"><img src="https://img.icons8.com/ios/24/007A3D/save.png" alt="sauvegarder" style="width:20px;height:20px;vertical-align:middle"> Sauvegarder les modifications</button>
+            <button class="btn bo" onclick="chargerConfig()"><img src="https://img.icons8.com/ios/18/007A3D/refresh.png" alt="relancer" style="width:14px;height:14px;vertical-align:middle"> Réinitialiser</button>
+          </div>
+        </div>
+
+        <!-- CARTE 2 : Notifications -->
+        <div class="cd">
+          <div class="ch"><div class="ct"><img src="https://img.icons8.com/ios/24/007A3D/bell.png" alt="notification" style="width:20px;height:20px;vertical-align:middle"> Notifications</div></div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:13px;font-weight:600">Alerte rupture stock</div><div style="font-size:11px;color:var(--mu)">SMS quand stock = 0</div></div>
+              <input type="checkbox" id="notif-rupture" checked style="width:18px;height:18px;accent-color:var(--g)">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:13px;font-weight:600">Nouvelle commande</div><div style="font-size:11px;color:var(--mu)">SMS au gérant</div></div>
+              <input type="checkbox" id="notif-cmd" checked style="width:18px;height:18px;accent-color:var(--g)">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:13px;font-weight:600">Confirmation client</div><div style="font-size:11px;color:var(--mu)">SMS après commande</div></div>
+              <input type="checkbox" id="notif-client" checked style="width:18px;height:18px;accent-color:var(--g)">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:13px;font-weight:600">Résumé quotidien</div><div style="font-size:11px;color:var(--mu)">Email à 18h chaque jour</div></div>
+              <input type="checkbox" id="notif-resume" style="width:18px;height:18px;accent-color:var(--g)">
+            </div>
+          </div>
+          <div class="btng" style="margin-top:14px">
+            <button class="btn bp" onclick="sauvegarderNotifs()"><img src="https://img.icons8.com/ios/24/007A3D/save.png" alt="sauvegarder" style="width:20px;height:20px;vertical-align:middle"> Sauvegarder</button>
+          </div>
+        </div>
+
+        <!-- CARTE 3 : Aperçu footer -->
+        <div class="cd">
+          <div class="ch"><div class="ct"><img src="https://img.icons8.com/ios/24/007A3D/eye.png" alt="voir" style="width:18px;height:18px;vertical-align:middle"> Aperçu footer boutique</div></div>
+          <div id="apercu-footer" style="background:#005229;border-radius:10px;padding:18px;color:#fff;font-size:12px;line-height:1.7">
+            <div style="font-weight:700;font-size:14px;margin-bottom:6px" id="ap-nom">SuperMarché CM</div>
+            <div style="opacity:.85;margin-bottom:10px" id="ap-desc">La première plateforme de courses en ligne au Cameroun.</div>
+            <div id="ap-adresse"><img src="https://img.icons8.com/ios/24/007A3D/place-marker.png" alt="adresse" style="width:18px;height:18px;vertical-align:middle"> Bepanda, Douala, Cameroun</div>
+            <div id="ap-tel"><img src="https://img.icons8.com/ios/24/007A3D/phone.png" alt="telephone" style="width:20px;height:20px;vertical-align:middle"> +237 683 39 22 68</div>
+            <div id="ap-email"><img src="https://img.icons8.com/ios/20/007A3D/email.png" alt="email" style="width:18px;height:18px;vertical-align:middle"> lembetiny02@gmail.com</div>
+            <div style="margin-top:12px;font-weight:700">Nos magasins</div>
+            <div id="ap-magasins" style="opacity:.85"></div>
+            <div style="margin-top:10px;font-size:11px;border-top:1px solid rgba(255,255,255,.2);padding-top:8px" id="ap-copy">© 2026 SuperMarché CM — Tous droits réservés <img src="https://flagcdn.com/w20/cm.png" alt="Cameroun" style="width:20px;height:14px;vertical-align:middle"></div>
+          </div>
+          <p style="font-size:11px;color:var(--mu);margin-top:8px">Cet aperçu se met à jour en direct quand vous tapez.</p>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ════════ LIVRAISONS ADMIN ════════ -->
+    <div class="page" id="page-livraisons-admin">
+      <div class="ptitle">
+        <div style="font-size:32px"><img src="https://img.icons8.com/ios/24/007A3D/delivery-truck.png" alt="livraison" style="width:20px;height:20px;vertical-align:middle"></div>
+        <div><div class="flag"></div><h2>Gestion des livraisons</h2><p>Assignez et suivez toutes les livraisons</p></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="cd" style="padding:10px 16px;text-align:center;min-width:80px"><div style="font-size:18px;font-weight:800;color:#f59e0b" id="liv-stat-en_attente">0</div><div style="font-size:11px;color:#999">En attente</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center;min-width:80px"><div style="font-size:18px;font-weight:800;color:#3b82f6" id="liv-stat-assignee">0</div><div style="font-size:11px;color:#999">Assignées</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center;min-width:80px"><div style="font-size:18px;font-weight:800;color:#8b5cf6" id="liv-stat-en_route">0</div><div style="font-size:11px;color:#999">En route</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center;min-width:80px"><div style="font-size:18px;font-weight:800;color:#10b981" id="liv-stat-livree">0</div><div style="font-size:11px;color:#999">Livrées</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center;min-width:80px"><div style="font-size:18px;font-weight:800;color:#ef4444" id="liv-stat-echec">0</div><div style="font-size:11px;color:#999">Échecs</div></div>
+        </div>
+        <select id="liv-filtre" onchange="renderLivraisons()" style="padding:8px 12px;border-radius:8px;border:1px solid #ddd;font-size:13px">
+          <option value="tous">Toutes</option>
+          <option value="en_attente">En attente</option>
+          <option value="assignee">Assignées</option>
+          <option value="en_route">En route</option>
+          <option value="livree">Livrées</option>
+          <option value="echec">Échecs</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f7f2">
+            <th style="padding:10px;text-align:left">ID Livraison</th>
+            <th style="padding:10px;text-align:left">Client</th>
+            <th style="padding:10px;text-align:left">Adresse</th>
+            <th style="padding:10px;text-align:right">Montant</th>
+            <th style="padding:10px;text-align:left">Livreur</th>
+            <th style="padding:10px;text-align:left">Statut</th>
+            <th style="padding:10px;text-align:left">Date</th>
+            <th style="padding:10px;text-align:left">Actions</th>
+          </tr></thead>
+          <tbody id="livraisons-tbody"><tr><td colspan="8" style="text-align:center;color:#999;padding:20px">Chargement...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- ════════ GESTION LIVREURS ════════ -->
+    <div class="page" id="page-livreurs">
+      <div class="ptitle">
+        <div style="font-size:32px">🏍️</div>
+        <div><div class="flag"></div><h2>Gestion des Livreurs</h2><p class="psub">Livreurs partout au Cameroun — 10 régions, 36 villes</p></div>
+      </div>
+      <div id="livreurs-container">
+        <p style="color:#999;text-align:center;padding:40px">Chargement...</p>
+      </div>
+    </div>
+
+    <!-- ════════ VUE LIVREUR ════════ -->
+    <div class="page" id="page-livraisons-livreur">
+      <div class="ptitle">
+        <div style="font-size:32px"><img src="https://img.icons8.com/ios/24/007A3D/motorcycle-delivery.png" alt="livreur" style="width:20px;height:20px;vertical-align:middle"></div>
+        <div><div class="flag"></div><h2>Mes livraisons</h2></div>
+      </div>
+      <div id="vue-livreur"></div>
+    </div>
+
+    <!-- ════════ PROMOTIONS ════════ -->
+    <div class="page" id="page-promotions">
+      <div class="ptitle">
+        <div style="font-size:32px"><img src="https://img.icons8.com/ios/24/007A3D/price-tag.png" alt="promo" style="width:20px;height:20px;vertical-align:middle"></div>
+        <div><div class="flag"></div><h2>Promotions & Codes promo</h2><p>Créez des offres pour fidéliser vos clients</p></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="display:flex;gap:10px">
+          <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#007A3D" id="promo-nb-actifs">0</div><div style="font-size:11px;color:#999">Actifs</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#3b82f6" id="promo-total-uses">0</div><div style="font-size:11px;color:#999">Utilisations</div></div>
+        </div>
+        <button class="btn bp" onclick="openM('m-promo')">+ Nouveau code promo</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f7f2">
+            <th style="padding:10px;text-align:left">Code</th>
+            <th style="padding:10px;text-align:left">Description</th>
+            <th style="padding:10px;text-align:left">Réduction</th>
+            <th style="padding:10px;text-align:left">Minimum</th>
+            <th style="padding:10px;text-align:left">Utilisations</th>
+            <th style="padding:10px;text-align:left">Expiration</th>
+            <th style="padding:10px;text-align:left">Statut</th>
+            <th style="padding:10px;text-align:left">Actions</th>
+          </tr></thead>
+          <tbody id="promos-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════ FIDÉLITÉ ════════ -->
+    <div class="page" id="page-fidelite">
+      <div class="ptitle">
+        <div style="font-size:32px"><img src="https://img.icons8.com/ios/24/007A3D/star.png" alt="fidelite" style="width:20px;height:20px;vertical-align:middle"></div>
+        <div><div class="flag"></div><h2>Programme de fidélité</h2><p>1 point par 100 FCFA • 1 point = 10 FCFA de remise</p></div>
+      </div>
+      <div style="background:#e8f5ef;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#005229">
+        <img src="https://img.icons8.com/ios/24/007A3D/star.png" alt="fidelite" style="width:20px;height:20px;vertical-align:middle"> <strong>Niveaux :</strong> Bronze (0 pts) → Argent (500 pts) → Or (2 000 pts) → Platine (5 000 pts). Chaque livraison réussie ajoute automatiquement des points.
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#007A3D" id="fidel-nb">0</div><div style="font-size:11px;color:#999">Clients inscrits</div></div>
+        <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#f59e0b" id="fidel-pts">0</div><div style="font-size:11px;color:#999">Points actifs</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f7f2">
+            <th style="padding:10px">#</th>
+            <th style="padding:10px;text-align:left">Client</th>
+            <th style="padding:10px;text-align:left">Niveau</th>
+            <th style="padding:10px;text-align:left">Points</th>
+            <th style="padding:10px;text-align:left">Achats</th>
+            <th style="padding:10px;text-align:left">Membre depuis</th>
+            <th style="padding:10px;text-align:left">Action</th>
+          </tr></thead>
+          <tbody id="fidelite-tbody"><tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Aucun client fidélité pour le moment</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════ UTILISATEURS ════════ -->
+    <div class="page" id="page-utilisateurs">
+      <div class="ptitle">
+        <div style="font-size:32px"><img src="https://img.icons8.com/ios/24/007A3D/conference-call.png" alt="utilisateurs" style="width:20px;height:20px;vertical-align:middle"></div>
+        <div><div class="flag"></div><h2>Utilisateurs</h2><p>Gérez les accès de votre équipe</p></div>
+      </div>
+      <div style="background:#fff3cd;border:1px solid #e6a817;border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px">
+        <strong>4 rôles :</strong>
+        <span style="background:#CE1126;color:#fff;padding:1px 8px;border-radius:20px;font-size:11px">Administrateur</span> accès total —
+        <span style="background:#007A3D;color:#fff;padding:1px 8px;border-radius:20px;font-size:11px">Gérant</span> gestion quotidienne —
+        <span style="background:#1d4ed8;color:#fff;padding:1px 8px;border-radius:20px;font-size:11px">Caissier</span> ventes et commandes —
+        <span style="background:#b45309;color:#fff;padding:1px 8px;border-radius:20px;font-size:11px">Livreur</span> ses livraisons uniquement
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <button class="btn bp" onclick="openM('m-user')">+ Ajouter un utilisateur</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f7f2">
+            <th style="padding:10px;text-align:left">Nom</th>
+            <th style="padding:10px;text-align:left">Email</th>
+            <th style="padding:10px;text-align:left">Rôle</th>
+            <th style="padding:10px;text-align:left">Supermarché</th>
+            <th style="padding:10px;text-align:left">Statut</th>
+            <th style="padding:10px;text-align:left">Dernière connexion</th>
+            <th style="padding:10px;text-align:left">Actions</th>
+          </tr></thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════ RETOURS ════════ -->
+    <div class="page" id="page-retours">
+      <div class="ptitle">
+        <div style="font-size:32px">↩️</div>
+        <div><div class="flag"></div><h2>Retours & Remboursements</h2><p>Traitez les demandes clients</p></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#3b82f6" id="ret-nb-total">0</div><div style="font-size:11px;color:#999">Total retours</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#f59e0b" id="ret-nb-attente">0</div><div style="font-size:11px;color:#999">En attente</div></div>
+          <div class="cd" style="padding:10px 16px;text-align:center"><div style="font-size:18px;font-weight:800;color:#ef4444" id="ret-montant-total">0 FCFA</div><div style="font-size:11px;color:#999">Remboursé</div></div>
+        </div>
+        <button class="btn bp" onclick="openM('m-retour')">+ Nouveau retour</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f7f2">
+            <th style="padding:10px;text-align:left">ID Retour</th>
+            <th style="padding:10px;text-align:left">Client</th>
+            <th style="padding:10px;text-align:left">Raison</th>
+            <th style="padding:10px;text-align:right">Montant</th>
+            <th style="padding:10px;text-align:left">Mode remb.</th>
+            <th style="padding:10px;text-align:left">Statut</th>
+            <th style="padding:10px;text-align:left">Date</th>
+            <th style="padding:10px;text-align:left">Actions</th>
+          </tr></thead>
+          <tbody id="retours-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════ STATS CLIENTS ════════ -->
+    <div class="page" id="page-stats-clients">
+      <div class="ptitle">
+        <div style="font-size:32px"><img src="https://img.icons8.com/ios/24/007A3D/bar-chart.png" alt="statistiques" style="width:20px;height:20px;vertical-align:middle"></div>
+        <div><div class="flag"></div><h2>Statistiques clients</h2><p>Analysez le comportement de vos clients</p></div>
+      </div>
+      <div id="stats-clients-content"></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ════════════════════ PANIER ════════════════════ -->
+<div class="pov" id="pov">
+  <div class="pbg" onclick="closePanier()"></div>
+  <div class="pp">
+    <div class="ph">
+      <h3>Mon Panier</h3>
+      <div style="display:flex;gap:5px">
+        <button class="btn bo bsm" onclick="viderPanier()">Vider</button>
+        <button class="cbtn" onclick="closePanier()">X</button>
+      </div>
+    </div>
+    <div class="pbody" id="pbody"></div>
+    <div class="pfoot">
+      <div class="pln"><span>Sous-total</span><span id="p-st">0 FCFA</span></div>
+      <div class="pln"><span>Livraison</span><span style="color:var(--g);font-weight:600">Gratuite</span></div>
+      <div class="pln pgrand"><span>TOTAL</span><span id="p-tot">0 FCFA</span></div>
+      <div class="psel">
+        <select id="p-sm">
+          <option>SuperMarché CM — Douala</option>
+        </select>
+        <select id="p-pay">
+          <option>Espèces</option><option>Carte bancaire</option>
+          <option>Mobile Money (MTN/Orange)</option><option>Virement</option>
+        </select>
+        <input type="text" id="p-cli" placeholder="Nom du client (optionnel)">
+        <input type="tel" id="p-tel" placeholder="Téléphone (optionnel)">
+      </div>
+      <div class="pact">
+        <button class="btn bp" onclick="passerCmd('achat')">Confirmer la commande</button>
+        <button class="btn bw" onclick="passerCmd('reservation')">Réserver (payer plus tard)</button>
+        <button class="btn bo" onclick="closePanier()">Continuer les achats</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bouton panier flottant -->
+<div class="cf" id="cf" onclick="openPanier()">
+  <img src="https://images.unsplash.com/photo-1481437156560-3205f6a55735?w=40&h=40&fit=crop" class="cf-cart-img" alt="">
+  Panier : <span id="cf-cnt">0</span> art. — <span id="cf-tot">0 FCFA</span>
+</div>
+
+<!-- ════════════════════ NOTIFICATIONS ════════════════════ -->
+<div class="nbg2" id="nbg2" onclick="closeNotif()"></div>
+<div class="nov" id="nov">
+  <div class="np">
+    <div class="nh">
+      <h3>Notifications</h3>
+      <div style="display:flex;gap:5px;align-items:center">
+        <a style="font-size:12px;color:var(--g);cursor:pointer;font-weight:600" onclick="markRead()">Tout lire</a>
+        <button class="cbtn" onclick="closeNotif()">X</button>
+      </div>
+    </div>
+    <div class="nlist" id="nlist"><p style="color:#999;text-align:center;padding:20px;font-size:13px">Chargement des notifications...</p></div>
+    <div class="nfoot"><a onclick="closeNotif()">Fermer</a></div>
+  </div>
+</div>
+
+<!-- ════════════════════ MODALS ════════════════════ -->
+<div class="mo" id="m-sm">
+  <div class="mdl">
+    <div class="mh"><h3>Nouveau supermarché</h3><button class="cbtn" onclick="closeM('m-sm')"><img src="https://img.icons8.com/ios/18/CE1126/delete-sign.png" alt="fermer" style="width:14px;height:14px;vertical-align:middle"></button></div>
+    <div class="fg2">
+      <div class="fg ff"><label>Nom du supermarché *</label><input type="text" id="sm-n" placeholder="Ex: SuperMarché Bepanda"></div>
+      <div class="fg"><label>Ville *</label><select id="sm-v">
+        <option>Yaoundé</option><option>Douala</option><option>Bafoussam</option>
+        <option>Garoua</option><option>Maroua</option><option>Kribi</option>
+        <option>Limbé</option><option>Ebolowa</option><option>Ngaoundéré</option><option>Autre</option>
+      </select></div>
+      <div class="fg ff"><label>Adresse</label><input type="text" id="sm-a" placeholder="Quartier, avenue, rue..."></div>
+      <div class="fg"><label>Nom du gérant</label><input type="text" id="sm-g" placeholder="Prénom NOM"></div>
+      <div class="fg"><label>Téléphone</label><input type="tel" id="sm-t" placeholder="+237 683 39 22 68"></div>
+      <div class="fg"><label>Statut</label><select id="sm-st">
+        <option value="ouvert">Ouvert</option>
+        <option value="maintenance">Maintenance</option>
+        <option value="ferme">Fermé</option>
+      </select></div>
+      <div class="fg"><label>Nombre d'employés</label><input type="number" id="sm-emp" placeholder="0" min="0" style="width:100%;padding:10px;border:1.5px solid var(--br);border-radius:8px;font-size:13px;box-sizing:border-box"></div>
+      <div class="fg ff"><label>URL image (optionnel)</label><input type="url" id="sm-img" placeholder="https://images.unsplash.com/..."></div>
+    </div>
+    <div class="btng">
+      <button class="btn bp" id="sm-save-btn" onclick="ajouterSM()">Ajouter</button>
+      <button class="btn bo" onclick="closeM('m-sm')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-prod">
+  <div class="mdl">
+    <div class="mh"><h3>Nouveau produit</h3><button class="cbtn" onclick="closeM('m-prod')">X</button></div>
+    <div class="fg2">
+      <div class="fg ff"><label>Nom du produit</label><input type="text" id="pn" placeholder="Ex: Riz parfumé 25kg"></div>
+      <div class="fg"><label>Catégorie</label><select id="pc"><option>Alimentation</option><option>Boissons</option><option>Hygiène</option><option>Laitiers</option><option>Boulangerie</option><option>Beauté</option><option>Numérique</option><option>Téléphonie</option><option>Accessoires</option><option>Formation Digitale</option><option>Condiments &amp; Epices</option><option>Bebe &amp; Maternite</option><option>Articles Menagers</option><option>Eau &amp; Eau Minerale</option><option>Surgeles &amp; Conserves</option><option>Papeterie &amp; Fournitures</option></select></div>
+      <div class="fg"><label>Prix (FCFA)</label><input type="number" id="pp" placeholder="0" min="0"></div>
+      <div class="fg"><label>Stock initial</label><input type="number" id="ps" placeholder="0" min="0"></div>
+      <div class="fg"><label>Supermarché</label><select id="psm" data-sm-select><option>SuperMarché CM — Douala</option></select></div>
+      <div class="fg"><label>Seuil alerte</label><input type="number" id="psl" placeholder="10" min="0"></div>
+      <div class="fg ff"><label>URL de l'image produit</label><input type="url" id="pimg" placeholder="https://images.unsplash.com/..."></div>
+    </div>
+    <div class="btng"><button class="btn bp" onclick="ajouterProd()">Ajouter</button><button class="btn bo" onclick="closeM('m-prod')">Annuler</button></div>
+  </div>
+</div>
+
+<div class="mo" id="m-emp">
+  <div class="mdl">
+    <div class="mh"><h3>Nouvel employé</h3><button class="cbtn" onclick="closeM('m-emp')">X</button></div>
+    <div class="fg2">
+      <div class="fg"><label>Prénom</label><input type="text" id="ep" placeholder="Prénom"></div>
+      <div class="fg"><label>Nom</label><input type="text" id="en" placeholder="Nom"></div>
+      <div class="fg"><label>Téléphone</label><input type="tel" id="et" placeholder="+237 000 000 000"></div>
+      <div class="fg"><label>Poste</label><select id="epo"><option>Caissier(e)</option><option>Gérant(e)</option><option>Magasinier</option></select></div>
+      <div class="fg"><label>Supermarché</label><select id="esm" data-sm-select><option>SuperMarché CM — Douala</option></select></div>
+      <div class="fg"><label>Salaire (FCFA)</label><input type="number" id="esal" placeholder="0"></div>
+    </div>
+    <div class="btng"><button class="btn bp" onclick="ajouterEmp()">Ajouter</button><button class="btn bo" onclick="closeM('m-emp')">Annuler</button></div>
+  </div>
+</div>
+
+<div class="mo" id="m-four">
+  <div class="mdl">
+    <div class="mh"><h3>Nouveau fournisseur</h3><button class="cbtn" onclick="closeM('m-four')">X</button></div>
+    <div class="fg2">
+      <div class="fg ff"><label>Raison sociale</label><input type="text" id="fn" placeholder="Nom entreprise"></div>
+      <div class="fg"><label>Contact</label><input type="tel" id="ftel" placeholder="+237 000 000 000"></div>
+      <div class="fg"><label>Catégorie</label><select id="fcat"><option>Alimentation</option><option>Boissons</option><option>Hygiène</option><option>Laitiers</option><option>Boulangerie</option><option>Beauté</option><option>Numérique</option><option>Téléphonie</option><option>Accessoires</option><option>Formation Digitale</option><option>Condiments &amp; Epices</option><option>Bebe &amp; Maternite</option><option>Articles Menagers</option><option>Eau &amp; Eau Minerale</option><option>Surgeles &amp; Conserves</option><option>Papeterie &amp; Fournitures</option></select></div>
+      <div class="fg"><label>Ville</label><select id="fville"><option value="">Sélectionner...</option></select></div>
+      <div class="fg"><label>Montant dû (FCFA)</label><input type="number" id="fmontant" placeholder="0" min="0"></div>
+    </div>
+    <div class="btng"><button class="btn bp" onclick="ajouterFour()">Ajouter</button><button class="btn bo" onclick="closeM('m-four')">Annuler</button></div>
+  </div>
+</div>
+
+<div class="mo" id="m-cmd">
+  <div class="mdl">
+    <div class="mh"><h3>Nouvelle commande</h3><button class="cbtn" onclick="closeM('m-cmd')">X</button></div>
+    <div class="fg2">
+      <div class="fg"><label>Client</label><input type="text" id="cc" placeholder="Nom du client"></div>
+      <div class="fg"><label>Téléphone</label><input type="tel" id="ctel" placeholder="+237 000 000 000"></div>
+      <div class="fg"><label>Supermarché</label><select id="csm" data-sm-select><option>SuperMarché CM — Douala</option></select></div>
+      <div class="fg"><label>Paiement</label><select id="cpay"><option>Espèces</option><option>Carte bancaire</option><option>Mobile Money</option></select></div>
+      <div class="fg ff"><label>Produits commandés</label><textarea id="cprod" placeholder="Ex: 2x Riz 25kg, 3x Huile palme..."></textarea></div>
+      <div class="fg"><label>Montant total (FCFA)</label><input type="number" id="cmt" placeholder="0" min="0"></div>
+      <div class="fg"><label>Type</label><select id="cty"><option value="achat">Achat</option><option value="reservation">Réservation</option></select></div>
+      <div class="fg ff"><label>Notes</label><textarea id="cnotes" placeholder="Instructions..." style="min-height:50px"></textarea></div>
+    </div>
+    <div class="btng"><button class="btn bp" onclick="creerCmdManuelle()">Créer la commande</button><button class="btn bo" onclick="closeM('m-cmd')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="tw2" id="tw2"></div>
+
+<!-- ════════════════════ SCRIPTS ════════════════════ -->
+<!-- SDK Supabase (base de données) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Leaflet GPS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Config + Services -->
+<script src="config.js"></script>
+<script src="villes.js"></script>
+<script src="db.js"></script>
+<script src="paiement.js"></script>
+<script src="multi-users.js"></script>
+<script src="promotions.js"></script>
+<script src="fidelite.js"></script>
+<script src="livraisons.js"></script>
+<script src="livreurs.js"></script>
+<script src="retours.js"></script>
+<script src="stats-clients.js"></script>
+<script src="script.js"></script>
+
+
+<!-- ════════ MODAL : Nouveau code promo ════════ -->
+<div class="mo" id="m-promo">
+  <div class="mdl">
+    <div class="mh"><h3>Nouveau code promo</h3><button class="cbtn" onclick="closeM('m-promo')"><img src="https://img.icons8.com/ios/18/CE1126/delete-sign.png" alt="fermer" style="width:14px;height:14px;vertical-align:middle"></button></div>
+    <div class="fg2">
+      <div class="fg"><label>Code promo *</label><input type="text" id="promo-code" placeholder="Ex: NOEL25" style="text-transform:uppercase"></div>
+      <div class="fg"><label>Type de réduction *</label>
+        <select id="promo-type">
+          <option value="pourcentage">Pourcentage (%)</option>
+          <option value="montant">Montant fixe (FCFA)</option>
+          <option value="livraison">Livraison gratuite</option>
+        </select>
+      </div>
+      <div class="fg"><label>Valeur *</label><input type="number" id="promo-valeur" placeholder="Ex: 10 pour 10%"></div>
+      <div class="fg"><label>Achat minimum (FCFA)</label><input type="number" id="promo-min" placeholder="0 = sans minimum"></div>
+      <div class="fg"><label>Nb max d'utilisations</label><input type="number" id="promo-max" placeholder="100"></div>
+      <div class="fg"><label>Date d'expiration *</label><input type="date" id="promo-expire"></div>
+      <div class="fg ff"><label>Description</label><input type="text" id="promo-desc" placeholder="Ex: 10% pour les nouveaux clients"></div>
+    </div>
+    <div class="btng"><button class="btn bp" onclick="ajouterPromo()">Créer le code</button><button class="btn bo" onclick="closeM('m-promo')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- ════════ MODAL : Nouvel utilisateur ════════ -->
+<div class="mo" id="m-user">
+  <div class="mdl">
+    <div class="mh"><h3>Nouvel utilisateur</h3><button class="cbtn" onclick="closeM('m-user')"><img src="https://img.icons8.com/ios/18/CE1126/delete-sign.png" alt="fermer" style="width:14px;height:14px;vertical-align:middle"></button></div>
+    <div class="fg2">
+      <div class="fg ff"><label>Nom complet *</label><input type="text" id="usr-nom" placeholder="Prénom NOM"></div>
+      <div class="fg"><label>Email *</label><input type="email" id="usr-email" placeholder="email@supermarche.cm"></div>
+      <div class="fg"><label>Mot de passe *</label><div style="position:relative;display:flex;align-items:center">
+            <input type="password" id="usr-pwd" placeholder="Minimum 6 caractères" style="width:100%;padding-right:40px;box-sizing:border-box">
+            <button type="button" onclick="togglePwd('usr-pwd',this)" style="position:absolute;right:12px;background:none;border:none;cursor:pointer;color:#999;padding:0;display:flex;align-items:center;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div></div>
+      <div class="fg"><label>Rôle *</label>
+        <select id="usr-role">
+          <option value="gerant">Gérant(e) — gestion quotidienne</option>
+          <option value="caissier">Caissier(ère) — ventes et commandes</option>
+          <option value="livreur">Livreur — livraisons uniquement</option>
+        </select>
+      </div>
+      <div class="fg"><label>Supermarché assigné</label><select id="usr-sm" data-sm-select><option>Tous</option></select></div>
+    </div>
+    <div class="btng"><button class="btn bp" id="usr-save-btn" onclick="ajouterUser()">Ajouter</button><button class="btn bo" onclick="closeM('m-user')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- ════════ MODAL : Nouveau retour ════════ -->
+<div class="mo" id="m-retour">
+  <div class="mdl">
+    <div class="mh"><h3>Demande de retour</h3><button class="cbtn" onclick="closeM('m-retour')"><img src="https://img.icons8.com/ios/18/CE1126/delete-sign.png" alt="fermer" style="width:14px;height:14px;vertical-align:middle"></button></div>
+    <div class="fg2">
+      <div class="fg"><label>N° Commande *</label><input type="text" id="ret-cmd" placeholder="CMD-00X"></div>
+      <div class="fg"><label>Nom du client</label><input type="text" id="ret-client" placeholder="Nom du client"></div>
+      <div class="fg"><label>Raison du retour *</label>
+        <select id="ret-raison">
+          <option value="defectueux">Produit défectueux</option>
+          <option value="mauvais_produit">Mauvais produit livré</option>
+          <option value="non_livre">Commande non livrée</option>
+          <option value="qualite">Qualité insuffisante</option>
+          <option value="autre">Autre raison</option>
+        </select>
+      </div>
+      <div class="fg ff"><label>Détails</label><input type="text" id="ret-detail" placeholder="Précisez..."></div>
+      <div class="fg"><label>Montant à rembourser *</label><input type="number" id="ret-montant" placeholder="0"></div>
+      <div class="fg"><label>Mode de remboursement</label>
+        <select id="ret-mode">
+          <option>MTN Mobile Money</option>
+          <option>Orange Money</option>
+          <option>Espèces</option>
+          <option>Avoir en boutique</option>
+        </select>
+      </div>
+    </div>
+    <div class="btng"><button class="btn bp" onclick="creerRetour()">Enregistrer le retour</button><button class="btn bo" onclick="closeM('m-retour')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- ════════ MODAL : Historique client fidélité ════════ -->
+<div class="mo" id="m-fidelite-histo">
+  <div class="mdl" style="max-width:500px"></div>
+</div>
+
+<script>
+// Enregistrement du Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(reg) {
+        console.log('[PWA] Service Worker enregistré');
+        // Proposer l'installation
+        window.addEventListener('beforeinstallprompt', function(e) {
+          e.preventDefault();
+          var btn = document.getElementById('btn-installer-app');
+          if (btn) {
+            btn.style.display = 'flex';
+            btn.addEventListener('click', function() {
+              e.prompt();
+              e.userChoice.then(function(r){ if(r.outcome==='accepted') btn.style.display='none'; });
+            });
+          }
+        });
+      })
+      .catch(function(err) { console.warn('[PWA] SW non enregistré:', err); });
+  });
+}
+</script>
+</body>
+</html>
