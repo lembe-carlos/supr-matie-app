@@ -2,18 +2,18 @@
 //  SuperMarché CM — multi-users.js
 //  Gestion des roles : Administrateur, Gerant, Caissier, Livreur
 // ═══════════════════════════════════════════════════════
-
+ 
 // Email de l'administrateur principal — acces total
 var ADMIN_EMAIL = 'lembetiny02@gmail.com';
-
+ 
 var USERS = {
   comptes: [],
   seq: 1,
   currentUser: null,
-
+ 
   // Permissions par role
   permissions: {
-
+ 
     // Administrateur : acces total sans restriction
     administrateur: [
       'dashboard','supermarches','produits','achats','commandes','ventes',
@@ -21,27 +21,26 @@ var USERS = {
       'confidentialite','faq','parametres','livraisons-admin','promotions',
       'fidelite','utilisateurs','retours','stats-clients','livreurs','invitations'
     ],
-
-    // Gerant : gestion quotidienne — sans Parametres, Utilisateurs, Invitations, Reseaux
+ 
+    // Gerant : gestion quotidienne uniquement
     gerant: [
-      'dashboard','supermarches','produits','achats','commandes','ventes',
-      'employes','fournisseurs','rapports','ia','livraison',
-      'confidentialite','faq','livraisons-admin','promotions',
-      'fidelite','retours','stats-clients','livreurs'
+      'dashboard','produits','achats','commandes','ventes',
+      'fournisseurs','ia','livraisons-admin','promotions',
+      'fidelite','retours'
     ],
-
+ 
     // Caissier : encaissement uniquement
     caissier: [
       'dashboard','achats','commandes','ventes','fidelite'
     ],
-
+ 
     // Livreur : ses livraisons uniquement
     livreur: [
       'livraisons-livreur'
     ]
   }
 };
-
+ 
 // ── Initialisation ──
 function initUsers() {
   try {
@@ -54,7 +53,7 @@ function initUsers() {
     if (cu) USERS.currentUser = cu;
   } catch(e) {}
 }
-
+ 
 // ── Sauvegarde ──
 function saveUsers() {
   try {
@@ -64,7 +63,7 @@ function saveUsers() {
     }));
   } catch(e) {}
 }
-
+ 
 // ── Determiner le role d'un email ──
 function getRoleForEmail(email) {
   if (!email) return null;
@@ -74,14 +73,12 @@ function getRoleForEmail(email) {
   });
   return user ? user.role : null;
 }
-
+ 
 // ── Connexion ──
 function loginUser(email, pwd) {
   var normalizedEmail = (email || '').trim().toLowerCase();
-
-  // Verifier si c'est l'administrateur
+ 
   if (normalizedEmail === ADMIN_EMAIL.toLowerCase()) {
-    // L'admin est dans ACCOUNTS (script.js), on lui assigne le role administrateur
     var adminUser = {
       id: 0,
       nom: 'Administrateur',
@@ -96,26 +93,25 @@ function loginUser(email, pwd) {
     try { sessionStorage.setItem('sm_current_user', JSON.stringify(adminUser)); } catch(e) {}
     return adminUser;
   }
-
-  // Chercher dans les comptes enregistres
+ 
   var user = USERS.comptes.find(function(u){
     return u.email.toLowerCase() === normalizedEmail && u.pwd === pwd && u.actif;
   });
   if (!user) return null;
-
+ 
   user.derniere_co = new Date().toLocaleString('fr-FR');
   USERS.currentUser = user;
   try { sessionStorage.setItem('sm_current_user', JSON.stringify(user)); } catch(e) {}
   saveUsers();
   return user;
 }
-
+ 
 // ── Deconnexion ──
 function logoutUser() {
   USERS.currentUser = null;
   try { sessionStorage.removeItem('sm_current_user'); } catch(e) {}
 }
-
+ 
 // ── Verifier une permission ──
 function hasPermission(page) {
   if (!USERS.currentUser) return false;
@@ -123,13 +119,13 @@ function hasPermission(page) {
   var perms = USERS.permissions[role] || [];
   return perms.indexOf(page) !== -1;
 }
-
+ 
 // ── Est-ce l'administrateur ? ──
 function isAdmin() {
   return USERS.currentUser &&
     USERS.currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 }
-
+ 
 // ── Labels des roles ──
 function getRoleLabel(role) {
   var labels = {
@@ -140,7 +136,7 @@ function getRoleLabel(role) {
   };
   return labels[role] || role;
 }
-
+ 
 // ── Badge visuel du role ──
 function getRoleBadge(role) {
   var colors = {
@@ -153,17 +149,15 @@ function getRoleBadge(role) {
   return '<span style="background:' + color + ';color:#fff;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700">'
     + getRoleLabel(role) + '</span>';
 }
-
+ 
 // ── Appliquer les restrictions visuelles selon le role ──
 function applyRoleRestrictions() {
   if (!USERS.currentUser) return;
   var role = USERS.currentUser.role;
   var perms = USERS.permissions[role] || [];
-
-  // Masquer tous les elements de navigation non autorises
+ 
   document.querySelectorAll('.nv').forEach(function(el) {
     var onclick = el.getAttribute('onclick') || '';
-    // Extraire la page ciblee par cet element de menu
     var match = onclick.match(/goPage\(['"]([^'"]+)['"]\)/);
     if (!match) return;
     var page = match[1];
@@ -173,25 +167,22 @@ function applyRoleRestrictions() {
       el.style.display = '';
     }
   });
-
-  // Livreur : rediriger directement vers ses livraisons
+ 
   if (role === 'livreur') {
     goPage('livraisons-livreur');
     return;
   }
-
-  // Caissier : rediriger vers le dashboard
+ 
   if (role === 'caissier') {
     goPage('dashboard');
   }
-
-  // Afficher le role dans la sidebar (pied de page)
+ 
   var roleEl = document.getElementById('user-role-badge');
   if (roleEl) {
     roleEl.innerHTML = getRoleBadge(role);
   }
 }
-
+ 
 // ── Bloquer la navigation vers une page non autorisee ──
 function goPageSecure(page) {
   if (!USERS.currentUser) return;
@@ -201,17 +192,17 @@ function goPageSecure(page) {
   }
   goPage(page);
 }
-
+ 
 // ── Affichage du tableau des utilisateurs ──
 function renderUsers() {
   var tbody = document.getElementById('users-tbody');
   if (!tbody) return;
-
+ 
   if (USERS.comptes.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:20px">Aucun utilisateur enregistre</td></tr>';
     return;
   }
-
+ 
   tbody.innerHTML = USERS.comptes.map(function(u) {
     var isMe = USERS.currentUser && u.id === USERS.currentUser.id;
     return '<tr>'
@@ -229,7 +220,7 @@ function renderUsers() {
       + '</tr>';
   }).join('');
 }
-
+ 
 // ── Ajouter un utilisateur ──
 function ajouterUser() {
   var nom   = document.getElementById('usr-nom').value.trim();
@@ -237,7 +228,7 @@ function ajouterUser() {
   var pwd   = document.getElementById('usr-pwd').value.trim();
   var role  = document.getElementById('usr-role').value;
   var sm    = document.getElementById('usr-sm') ? document.getElementById('usr-sm').value : 'Tous';
-
+ 
   if (!nom || !email || !pwd) {
     toast('Tous les champs obligatoires sont requis', 'warning');
     return;
@@ -250,13 +241,12 @@ function ajouterUser() {
     toast('Un compte existe deja avec cet email', 'error');
     return;
   }
-
-  // Empecher la creation d'un autre administrateur
+ 
   if (role === 'administrateur') {
     toast('Le role Administrateur est unique et reserve', 'error');
     return;
   }
-
+ 
   var newUser = {
     id: USERS.seq++,
     nom: nom,
@@ -277,7 +267,7 @@ function ajouterUser() {
     if (el) el.value = '';
   });
 }
-
+ 
 // ── Modifier un utilisateur ──
 function editUser(id) {
   var u = USERS.comptes.find(function(x){ return x.id === id; });
@@ -293,7 +283,7 @@ function editUser(id) {
   if (mh) mh.textContent = 'Modifier l\'utilisateur';
   openM('m-user');
 }
-
+ 
 // ── Sauvegarder modification ──
 function saveEditUser(id) {
   var u = USERS.comptes.find(function(x){ return x.id === id; });
@@ -312,7 +302,7 @@ function saveEditUser(id) {
   var mh = document.querySelector('#m-user .mh h3');
   if (mh) mh.textContent = 'Nouvel utilisateur';
 }
-
+ 
 // ── Activer / Desactiver ──
 function toggleUser(id) {
   var u = USERS.comptes.find(function(x){ return x.id === id; });
