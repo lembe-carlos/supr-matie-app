@@ -1406,6 +1406,37 @@ function updSt(id, ns) {
       }).catch(function(e){ console.warn('SMS non envoyé:', e); });
     }
   }
+}/ ── Alertes stock dynamiques ──
+var alertes = PRODS
+  .filter(function(p){ return p.stock < 10; })
+  .sort(function(a,b){ return a.stock - b.stock; })
+  .slice(0, 5);
+
+var alerteBadge = document.getElementById('dash-alerte-badge');
+var alerteList  = document.getElementById('dash-alerte-list');
+
+if (alerteBadge) alerteBadge.textContent = alertes.length + ' alerte' + (alertes.length > 1 ? 's' : '');
+
+if (alerteList) {
+  if (alertes.length === 0) {
+    alerteList.innerHTML = '<p style="color:#007A3D;font-size:12px;text-align:center;padding:10px">Tous les stocks sont OK !</p>';
+  } else {
+    alerteList.innerHTML = alertes.map(function(p) {
+      var maxStock = 50;
+      var pct      = Math.round(p.stock / maxStock * 100);
+      var color    = p.stock === 0 ? 'var(--r)' : '#B8860B';
+      var barColor = p.stock === 0 ? 'var(--r)' : 'var(--y)';
+      var label    = p.stock === 0 ? 'Rupture' : p.stock + ' u.';
+      return '<div>'
+        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
+        + '<img src="' + p.img + '" style="width:22px;height:22px;border-radius:5px;object-fit:cover" onerror="this.src=\'https://images.unsplash.com/photo-1542838132-92c53300491e?w=40&h=40&fit=crop\'">'
+        + '<span style="font-size:12px;flex:1">' + p.nom + '</span>'
+        + '<span style="color:' + color + ';font-weight:700;font-size:12px">' + label + '</span>'
+        + '</div>'
+        + '<div class="pb"><div class="pf" style="width:' + pct + '%;background:' + barColor + '"></div></div>'
+        + '</div>';
+    }).join('');
+  }
 }
 
 function passerCmd(type) {
